@@ -104,6 +104,11 @@ configuration management tool, to override the default of `latest`.
 The value of `CM_VERSION` should have the form `x.y` or `x.y.z`,
 such as `CM_VERSION := 11.12.4`
 
+The variable `DEV` can be set to prevent the removal of potentially
+useful files and packages, should the image be used for Debian
+package development.
+Set `DEV := true` the default is false.
+
 The variable `HEADLESS` can be set to run Packer in headless mode.
 Set `HEADLESS := true`, the default is false.
 
