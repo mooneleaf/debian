@@ -8,7 +8,8 @@ sleep ${CLEANUP_PAUSE}
 # http://6.ptmc.org/?p=164
 echo "cleaning up udev rules"
 rm -rf /dev/.udev/
-rm /lib/udev/rules.d/75-persistent-net-generator.rules
+# Better fix that persists package updates: http://serverfault.com/a/485689
+touch /etc/udev/rules.d/75-persistent-net-generator.rules
 
 echo "==> Cleaning up leftover dhcp leases"
 if [ -d "/var/lib/dhcp" ]; then
