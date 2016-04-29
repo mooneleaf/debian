@@ -9,6 +9,6 @@ tmp
 *.swp
 Makefile.local
 box/
-
 .DS_Store
 .tmpatlas/
+.idea
