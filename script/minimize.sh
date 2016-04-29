@@ -13,11 +13,9 @@ echo "==> Removing linux headers"
 dpkg --list | awk '{ print $2 }' | grep linux-headers | xargs apt-get -y purge
 echo "==> Removing linux source"
 dpkg --list | awk '{ print $2 }' | grep linux-source | xargs apt-get -y purge
-
 echo "==> Removing development packages"
 dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
 apt-get -y purge build-essential
-
 echo "==> Removing X11 libraries"
 apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6
 echo "==> Removing obsolete networking components"
