@@ -5,7 +5,7 @@
         "<esc><wait>",
         "install",
         " auto",
-        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `preseed` }}",
         " debian-installer=en_US",
         " locale=en_US",
         " keymap=us",
@@ -14,7 +14,8 @@
         "<enter>"
       ],
       "disk_size": "{{ user `disk_size` }}",
-      "guest_os_type": "debian7",
+      "guest_os_type": "{{ user `vmware_guest_os_type` }}",
+      "headless": "{{ user `headless` }}",
       "http_directory": "http",
       "iso_checksum": "{{user `iso_checksum`}}",
       "iso_checksum_type": "{{user `iso_checksum_type`}}",
@@ -22,16 +23,17 @@
         "{{ user `iso_path` }}/{{ user `iso_name` }}",
         "{{ user `iso_url` }}"
       ],
+      "output_directory": "output-{{ user `vm_name` }}-vmware-iso",
       "shutdown_command": "echo 'vagrant'|sudo -S shutdown -h now",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "tools_upload_flavor": "linux",
       "type": "vmware-iso",
-      "vm_name": "debian77-i386",
+      "vm_name": "{{ user `vm_name` }}",
       "vmx_data": {
-        "memsize": "512",
-        "numvcpus": "1"
+        "memsize": "{{ user `memory` }}",
+        "numvcpus": "{{ user `cpus` }}"
       }
     },
     {
@@ -39,7 +41,7 @@
         "<esc><wait>",
         "install",
         " auto",
-        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `preseed` }}",
         " debian-installer=en_US",
         " locale=en_US",
         " keymap=us",
@@ -49,32 +51,38 @@
       ],
       "disk_size": "{{ user `disk_size` }}",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
-      "guest_os_type": "Debian",
+      "guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
+      "headless": "{{ user `headless` }}",
       "http_directory": "http",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_urls": [
         "{{ user `iso_path` }}/{{ user `iso_name` }}",
         "{{ user `iso_url` }}"
       ],
+      "output_directory": "output-{{ user `vm_name` }}-virtualbox-iso",
       "shutdown_command": "echo 'vagrant'|sudo -S shutdown -h now",
       "ssh_password": "{{ user `ssh_password` }}",
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "type": "virtualbox-iso",
       "vboxmanage": [
-        [ "modifyvm", "{{.Name}}", "--memory", "512" ],
-        [ "modifyvm", "{{.Name}}", "--cpus", "1" ]
+        [
+          "modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"
+        ],
+        [
+          "modifyvm", "{{.Name}}", "--cpus", "{{ user `cpus` }}"
+        ]
       ],
       "virtualbox_version_file": ".vbox_version",
-      "vm_name": "debian77-i386"
+      "vm_name": "{{ user `vm_name` }}"
     },
     {
       "boot_command": [
         "<esc><wait>",
         "install",
         " auto",
-        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg",
+        " url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/{{ user `preseed` }}",
         " debian-installer=en_US",
         " locale=en_US",
         " keymap=us",
@@ -83,18 +91,23 @@
         "<enter>"
       ],
       "disk_size": "{{ user `disk_size` }}",
-      "guest_os_type": "debian",
+      "guest_os_type": "{{ user `parallels_guest_os_type` }}",
       "http_directory": "http",
-      "iso_checksum": "{{user `iso_checksum`}}",
-      "iso_checksum_type": "{{user `iso_checksum_type`}}",
+      "iso_checksum": "{{ user `iso_checksum` }}",
+      "iso_checksum_type": "{{ user `iso_checksum_type` }}",
       "iso_urls": [
         "{{ user `iso_path` }}/{{ user `iso_name` }}",
         "{{ user `iso_url` }}"
       ],
+      "output_directory": "output-{{ user `vm_name` }}-parallels-iso",
       "parallels_tools_flavor": "lin",
       "prlctl": [
-        [ "set", "{{.Name}}", "--memsize", "512" ],
-        [ "set", "{{.Name}}", "--cpus", "1" ]
+        [
+          "set", "{{.Name}}", "--memsize", "{{ user `memory` }}"
+        ],
+        [
+          "set", "{{.Name}}", "--cpus", "{{ user `cpus` }}"
+        ]
       ],
       "prlctl_version_file": ".prlctl_version",
       "shutdown_command": "echo 'vagrant'|sudo -S shutdown -h now",
@@ -102,13 +115,13 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "type": "parallels-iso",
-      "vm_name": "debian77-i386"
+      "vm_name": "{{ user `vm_name` }}"
     }
   ],
   "post-processors": [
     {
       "keep_input_artifact": false,
-      "output": "box/{{.Provider}}/debian77-i386-{{user `cm`}}{{user `cm_version`}}-{{user `version`}}.box",
+      "output": "box/{{.Provider}}/{{ user `vm_name` }}-{{ user `cm` }}{{ user `cm_version` }}-{{ user `version` }}.box",
       "type": "vagrant"
     }
   ],
@@ -117,7 +130,6 @@
       "environment_vars": [
         "CM={{user `cm`}}",
         "CM_VERSION={{user `cm_version`}}",
-        "CLEANUP_PAUSE={{user `cleanup_pause`}}",
         "UPDATE={{user `update`}}",
         "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
         "SSH_USERNAME={{user `ssh_username`}}",
@@ -130,11 +142,14 @@
       ],
       "execute_command": "echo 'vagrant' | {{.Vars}} sudo -E -S bash '{{.Path}}'",
       "scripts": [
-        "script/base.sh",
+        "script/remove-cdrom-sources.sh",
         "script/update.sh",
         "script/vagrant.sh",
-        "script/vmtool.sh",
+        "script/vmware.sh",
+        "script/virtualbox.sh",
+        "script/parallels.sh",
         "script/cmtool.sh",
+        "script/motd.sh",
         "script/minimize.sh",
         "script/cleanup.sh"
       ],
@@ -142,26 +157,32 @@
     }
   ],
   "variables": {
-    "cleanup_pause": "",
     "cm": "nocm",
     "cm_version": "",
-    "disk_size": "40000",
+    "cpus": "1",
+    "disk_size": "65536",
     "ftp_proxy": "{{env `ftp_proxy`}}",
     "headless": "",
     "http_proxy": "{{env `http_proxy`}}",
     "https_proxy": "{{env `https_proxy`}}",
     "install_vagrant_key": "true",
-    "iso_checksum": "4f65bd131a7a60007b238bcb750492eef515248a",
+    "iso_checksum": "40f51a36b39c180fe46d7393e5a3a3985072ffc2",
     "iso_checksum_type": "sha1",
-    "iso_name": "debian-7.7.0-i386-DVD-1.iso",
-    "iso_path": "iso",
-    "iso_url": "http://cdimage.debian.org/cdimage/archive/7.7.0/i386/iso-dvd/debian-7.7.0-i386-DVD-1.iso",
+    "iso_name": "debian-8.2.0-amd64-DVD-1.iso",
+    "iso_path": "/Volumes/Thunder/software/debian",
+    "iso_url": "http://cdimage.debian.org/cdimage/release/8.2.0/amd64/iso-dvd/debian-8.2.0-amd64-DVD-1.iso",
+    "memory": "512",
     "no_proxy": "{{env `no_proxy`}}",
+    "parallels_guest_os_type": "debian",
+    "preseed": "preseed-jessie.cfg",
     "rsync_proxy": "{{env `rsync_proxy`}}",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "update": "false",
-    "version": "0.1.0"
+    "version": "0.1.0",
+    "virtualbox_guest_os_type": "Debian_64",
+    "vm_name": "debian82",
+    "vmware_guest_os_type": "debian8-64"
   }
 }
 

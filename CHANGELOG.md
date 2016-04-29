@@ -1,5 +1,41 @@
 # Changelog
 
+## 2.0.5 (2016-01-11)
+
+* Upgrade Parallels tools to 11.1.2
+
+## 2.0.4 (2015-12-24)
+
+* Upgrade VirtualBox guest additions to 5.0.12
+* Upgrade Parallels tools to 11.1.1
+
+## 2.0.3 (2015-11-26)
+
+* Upgrade VirtualBox guest additions to 5.0.10
+* Upgrade Parallels tools to 11.1.0
+* Make images smaller by delaying creation of swap parition
+
+## 2.0.2 (2015-11-09)
+
+* Upgrade VirtualBox guest additions to 5.0.8
+* Upgrade VMware Tools to 10.0.1 for VMware Fusion 8.02
+* Port improvements in structure/build parallelism from Ubuntu templates
+
+## 2.0.1 (2015-10-03)
+
+* Upgrade VirtualBox guest additions to 5.0.6
+* Add templates for some older versions of Debian
+
+## 2.0.0 (2015-09-27)
+
+* Upgrade VirtualBox guest additions to 5.0.4
+* Upgrade VMware Tools to 10.0.0 for VMware Fusion 8
+* Add Debian 8.2 templates
+* Add Debian 7.9 templates
+* Remove Parallels provider
+* Add date stamp to motd
+* Remove deborphan phase in minimize
+
 ## 1.0.13 (2015-04-19)
 
 * Update Debian 8 to RC2

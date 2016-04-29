@@ -14,13 +14,9 @@ dpkg --list | awk '{ print $2 }' | grep linux-headers | xargs apt-get -y purge
 echo "==> Removing linux source"
 dpkg --list | awk '{ print $2 }' | grep linux-source | xargs apt-get -y purge
 
-if ! [[ ${DEV} == true ]]; then
-    echo "==> Removing development packages"
-    dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
-    echo "==> Removing documentation"
-    dpkg --list | awk '{ print $2 }' | grep -- '-doc$' | xargs apt-get -y purge
-    apt-get -y purge build-essential
-fi
+echo "==> Removing development packages"
+dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
+apt-get -y purge build-essential
 
 echo "==> Removing X11 libraries"
 apt-get -y purge libx11-data xauth libxmuu1 libxcb1 libx11-6 libxext6
@@ -44,29 +40,10 @@ apt-get -y autoremove --purge
 apt-get -y autoclean
 apt-get -y clean
 
-# Clean up orphaned packages with deborphan
-echo "==> Cleaning up orphaned packages with deborphan"
-apt-get -y install deborphan
-while [ -n "$(deborphan --guess-all --libdevel)" ]; do
-    deborphan --guess-all --libdevel | xargs apt-get -y purge
-done
-apt-get -y purge deborphan dialog
-
-if ! [[ ${DEV} == true ]]; then
-    echo "==> Removing man pages"
-    find /usr/share/man -type f -delete
-    echo "==> Removing any docs"
-    find /usr/share/doc -type f -delete
-
-    echo "==> Removing groff info lintian linda"
-    rm -rf /usr/share/groff/* /usr/share/info/* /usr/share/lintian/* /usr/share/linda/*
-fi
-
 echo "==> Removing APT files"
 find /var/lib/apt -type f -delete
 echo "==> Removing caches"
 find /var/cache -type f -delete
-echo "==> Removing lintian linda"
 
 echo "==> Disk usage after cleanup"
 df -h
