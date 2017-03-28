@@ -24,7 +24,7 @@ apt-get -y autoclean
 echo "==> Installed packages"
 dpkg --get-selections | grep -v deinstall
 
-DISK_USAGE_BEFORE_CLEANUP=$(df -h)
+DISK_USAGE_BEFORE_CLEANUP="$(df -h)"
 
 # Remove Bash history
 unset HISTFILE
@@ -77,7 +77,7 @@ rm -f /EMPTY
 sync
 
 echo "==> Disk usage before cleanup"
-echo ${DISK_USAGE_BEFORE_CLEANUP}
+echo "${DISK_USAGE_BEFORE_CLEANUP}"
 
 echo "==> Disk usage after cleanup"
 df -h
