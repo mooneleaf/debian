@@ -8,19 +8,14 @@ This repository contains Packer templates for creating Debian Vagrant boxes.
 
 64-bit boxes:
 
-* [Debian Jessie 8.2 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian82)
-* [Debian Jessie 8.1 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian81)
-* [Debian Jessie 8.0 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian80)
-* [Debian Wheezy 7.9 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian79)
-* [Debian Wheezy 7.8 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian78)
+* [Debian Jessie 8.6 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian8)
+* [Debian Jessie 8.6 Desktop (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian8-desktop)
+* [Debian Wheezy 7.11 (64-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian7)
 
 32-bit boxes:
 
-* [Debian Jessie 8.2 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian82-i386)
-* [Debian Jessie 8.1 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian81-i386)
-* [Debian Jessie 8.0 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian80-i386)
-* [Debian Wheezy 7.9 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian79-i386)
-* [Debian Wheezy 7.8 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian78-i386)
+* [Debian Jessie 8 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian8-i386)
+* [Debian Wheezy 7.11 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian7-i386)
 
 ## Building the Vagrant boxes with Packer
 
@@ -35,7 +30,7 @@ be installed as an additional preqrequisite.
 We make use of JSON files containing user variables to build specific versions of Ubuntu.
 You tell `packer` to use a specific user variable file via the `-var-file=` command line
 option.  This will override the default options on the core `debian.json` packer template,
-which builds Debian 8.2 by default.
+which builds Debian 8.5 by default.
 
 For example, to build Debian 7.9, use the following:
 
@@ -55,13 +50,13 @@ The boxcutter templates currently support the following desktop virtualization s
 ## Building the Vagrant boxes with the box script
 
 We've also provided a wrapper script `bin/box` for ease of use, so alternatively, you can use
-the following to build Debian 8.2 for all providers:
+the following to build Debian 8.5 for all providers:
 
-    $ bin/box build debian82
+    $ bin/box build debian85
 
-Or if you just want to build Debian 8.2 for VirtualBox:
+Or if you just want to build Debian 8.5 for VirtualBox:
 
-    $ bin/box build debian82 virtualbox
+    $ bin/box build debian85 virtualbox
 
 ## Building the Vagrant boxes with the Makefile
 
@@ -78,6 +73,17 @@ in your favourite CI tool:
     make assure  # Run tests against all the boxes
     make deliver # Upload box artifacts to a repository
     make clean   # Clean up build detritus
+
+### Acquiring ISO Images
+
+The ISO image are expected to be in the iso subdirectory or the user configured
+path. The easiest way to acquire the files is the Makefile which depends on [jigdo-lite](https://www.debian.org/CD/jigdo-cd/).
+
+For a single iso:
+  make iso/debian-7.8.0-amd64-DVD-1.iso
+
+For all isos:
+  make isos
 
 ### Proxy Settings
 
@@ -109,60 +115,6 @@ on the VirtualBox training environmnet, run the following command:
     make ssh-box/virtualbox/debian76-nocm.box
 
 Upon logout `make ssh-*` will automatically de-register the box as well.
-
-### Makefile.local override
-
-You can create a `Makefile.local` file alongside the `Makefile` to override
-some of the default settings.  The variables can that can be currently
-used are:
-
-* CM
-* CM_VERSION
-* \<iso_path\>
-* UPDATE
-
-`Makefile.local` is most commonly used to override the default configuration
-management tool, for example with Chef:
-
-    # Makefile.local
-    CM := chef
-
-Changing the value of the `CM` variable changes the target suffixes for
-the output of `make list` accordingly.
-
-Possible values for the CM variable are:
-
-* `nocm` - No configuration management tool
-* `chef` - Install Chef
-* `puppet` - Install Puppet
-* `salt`  - Install Salt
-
-You can also specify a variable `CM_VERSION`, if supported by the
-configuration management tool, to override the default of `latest`.
-The value of `CM_VERSION` should have the form `x.y` or `x.y.z`,
-such as `CM_VERSION := 11.12.4`
-
-The variable `HEADLESS` can be set to run Packer in headless mode.
-Set `HEADLESS := true`, the default is false.
-
-The variable `UPDATE` can be used to perform OS patch management.  The
-default is to not apply OS updates by default.  When `UPDATE := true`,
-the latest OS updates will be applied.
-
-The variable `PACKER` can be used to set the path to the packer binary.
-The default is `packer`.
-
-The variable `ISO_PATH` can be used to set the path to a directory with
-OS install images. This override is commonly used to speed up Packer builds
-by pointing at pre-downloaded ISOs instead of using the default download
-Internet URLs.
-
-The variables `SSH_USERNAME` and `SSH_PASSWORD` can be used to change the
- default name & password from the default `vagrant`/`vagrant` respectively.
-
-The variable `INSTALL_VAGRANT_KEY` can be set to turn off installation of the
-default insecure vagrant key when the image is being used outside of vagrant.
-Set `INSTALL_VAGRANT_KEY := false`, the default is true.
 
 ## Contributing
 

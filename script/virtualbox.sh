@@ -11,8 +11,4 @@ if [[ $PACKER_BUILDER_TYPE =~ virtualbox ]]; then
     umount /mnt
     rm /home/vagrant/VBoxGuestAdditions_${VBOX_VERSION}.iso
     rm /home/vagrant/.vbox_version
-
-    if [[ $VBOX_VERSION = "4.3.10" ]]; then
-        ln -s /opt/VBoxGuestAdditions-4.3.10/lib/VBoxGuestAdditions /usr/lib/VBoxGuestAdditions
-    fi
 fi
