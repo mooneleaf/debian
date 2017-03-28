@@ -175,7 +175,7 @@
     "memory": "512",
     "no_proxy": "{{env `no_proxy`}}",
     "parallels_guest_os_type": "debian",
-    "preseed": "preseed-jessie.cfg",
+    "preseed": "preseed.cfg",
     "rsync_proxy": "{{env `rsync_proxy`}}",
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",

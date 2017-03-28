@@ -8,7 +8,7 @@
   "iso_name": "debian-8.6.0-i386-DVD-1.iso",
   "iso_url": "http://cdimage.debian.org/cdimage/release/8.6.0/i386/iso-dvd/debian-8.6.0-i386-DVD-1.iso",
   "memory": "512",
-  "preseed": "preseed-jessie.cfg",
+  "preseed": "preseed.cfg",
   "virtualbox_guest_os_type": "Debian",
   "vmware_guest_os_type": "debian8"
 }
