@@ -32,8 +32,3 @@ if [ "$INSTALL_VAGRANT_KEY" = "true" ] || [ "$INSTALL_VAGRANT_KEY" = "1" ]; then
     chmod 600 $SSH_USER_HOME/.ssh/authorized_keys
     chown -R $SSH_USER:$SSH_USER $SSH_USER_HOME/.ssh
 fi
-
-if dpkg --list | awk '{ print $2 }' | grep '^systemd$' >/dev/null; then
-	echo "==> Installing PAM module for systemd to prevent Vagrant hangs"
-	apt-get -y install libpam-systemd
-fi
