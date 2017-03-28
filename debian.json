@@ -132,6 +132,7 @@
       "environment_vars": [
         "DESKTOP={{user `desktop`}}",
         "MOTD={{user `motd`}}",
+        "REMOVE_DOCS={{user `remove_docs`}}",
         "UPDATE={{user `update`}}",
         "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
         "SSH_USERNAME={{user `ssh_username`}}",
