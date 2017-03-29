@@ -184,7 +184,7 @@
     "ssh_password": "vagrant",
     "ssh_username": "vagrant",
     "update": "false",
-    "vagrantfile_template": "",
+    "vagrantfile_template": "tpl/vagrantfile-koalephant.rb",
     "version": "0.1.0",
     "virtualbox_guest_os_type": "Debian_64",
     "vm_name": "debian82",
