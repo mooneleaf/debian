@@ -116,7 +116,14 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "type": "parallels-iso",
-      "vm_name": "{{ user `vm_name` }}"
+      "vm_name": "{{ user `vm_name` }}",
+    },
+    {
+      "type": "null",
+      "name": "veertu",
+      "ssh_host": "{{ user `veertu_ip` }}",
+      "ssh_password": "{{ user `ssh_password` }}",
+      "ssh_username": "{{ user `ssh_username` }}"
     }
   ],
   "post-processors": [
@@ -124,7 +131,29 @@
       "keep_input_artifact": false,
       "output": "box/{{.Provider}}/{{ user `vm_name` }}-{{ user `version` }}.box",
       "type": "vagrant",
-      "vagrantfile_template": "{{ user `vagrantfile_template` }}"
+      "vagrantfile_template": "{{ user `vagrantfile_template` }}",
+      "except": ["veertu"]
+    },
+    {
+      "type": "shell-local",
+      "script": "veertu-processor.sh",
+      "environment_vars": [
+        "DESKTOP={{user `desktop`}}",
+        "MOTD={{user `motd`}}",
+        "REMOVE_DOCS={{user `remove_docs`}}",
+        "UPDATE={{user `update`}}",
+        "INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
+        "SSH_USERNAME={{user `ssh_username`}}",
+        "SSH_PASSWORD={{user `ssh_password`}}",
+        "VM_NAME={{user `vm_name`}}",
+        "VM_VERSION={{user `version` }}.box",
+        "http_proxy={{user `http_proxy`}}",
+        "https_proxy={{user `https_proxy`}}",
+        "ftp_proxy={{user `ftp_proxy`}}",
+        "rsync_proxy={{user `rsync_proxy`}}",
+        "no_proxy={{user `no_proxy`}}"
+      ],
+      "only": ["veertu"]
     }
   ],
   "provisioners": [
@@ -138,6 +167,7 @@
         "SSH_USERNAME={{user `ssh_username`}}",
         "SSH_PASSWORD={{user `ssh_password`}}",
         "VM_NAME={{user `vm_name`}}",
+        "VM_VERSION={{user `version` }}.box",
         "http_proxy={{user `http_proxy`}}",
         "https_proxy={{user `https_proxy`}}",
         "ftp_proxy={{user `ftp_proxy`}}",
