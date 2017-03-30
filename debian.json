@@ -189,7 +189,7 @@
     "vagrantfile_template": "tpl/vagrantfile-koalephant.rb",
     "version": "0.1.0",
     "virtualbox_guest_os_type": "Debian_64",
-    "vm_name": "debian82",
+    "vm_name": "debian8",
     "vmware_guest_os_type": "debian8-64"
   }
 }
