@@ -19,5 +19,7 @@ motd_current_version_file=/etc/update-motd.d/01-current-version
 printf "#!/bin/sh -eu\n" > ${motd_current_version_file}
 printf 'echo "%-20s %s"\n' "Current Release:" "\$(lsb_release -sd)" >> ${motd_current_version_file}
 
-
 chmod +x ${motd_original_release_file} ${motd_current_version_file}
+
+echo "==> Ensuring /etc/motd is a symlink"
+ln -sfvT /var/run/motd /etc/motd
