@@ -30,6 +30,7 @@
       "ssh_wait_timeout": "10000s",
       "tools_upload_flavor": "linux",
       "type": "vmware-iso",
+      "name": "vmware",
       "vm_name": "{{ user `vm_name` }}",
       "vmx_data": {
         "memsize": "{{ user `memory` }}",
@@ -67,6 +68,7 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "type": "virtualbox-iso",
+      "name": "virtualbox",
       "vboxmanage": [
         [
           "modifyvm", "{{.Name}}", "--memory", "{{ user `memory` }}"
@@ -116,6 +118,7 @@
       "ssh_username": "{{ user `ssh_username` }}",
       "ssh_wait_timeout": "10000s",
       "type": "parallels-iso",
+      "name": "parallels",
       "vm_name": "{{ user `vm_name` }}"
     }
   ],
