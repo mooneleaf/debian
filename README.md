@@ -7,13 +7,18 @@ This fork from [Boxcutter](https://github.com/boxcutter/debian) focuses on resol
 
 ## Current Boxes
 
+Currently only Parallels and VirtualBox boxes are being built by Koalephant.
+
 64-bit boxes:
 
 * [Debian Jessie 8 (64-bit)](https://atlas.hashicorp.com/koalephant/boxes/debian8-amd64)
+* [Debian Wheezy 7 (64-bit)](https://atlas.hashicorp.com/koalephant/boxes/debian7-amd64)
 
 32-bit boxes:
 
 * [Debian Jessie 8 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian8-i386)
+* [Debian Wheezy 7 (32-bit)](https://atlas.hashicorp.com/boxcutter/boxes/debian7-i386)
+
 
 ## Building the Vagrant boxes with Packer
 
