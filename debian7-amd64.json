@@ -7,5 +7,5 @@
   "virtualbox_guest_os_type": "Debian_64",
   "vmware_guest_os_type": "debian7-64",
   "version": "1.0.3",
-  "version_description": "Fix over-sized box after expansion"
+  "version_description": "Fix over-sized box after expansion\n\n- Using EXT4 filesystem"
 }
