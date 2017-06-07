@@ -1,0 +1,11 @@
+{
+  "_comment": "Build with `packer build -var-file=debian9-amd64.json debian.json`",
+  "vm_name": "debian9-amd64",
+  "iso_checksum": "08d3de665f9b39ab3f9041983ab1b40e34c9a08c",
+  "iso_name": "debian-stretch-DI-rc4-amd64-DVD-1.iso",
+  "iso_url": "http://cdimage.debian.org/cdimage/stretch_di_rc4/amd64/iso-dvd/debian-stretch-DI-rc4-amd64-DVD-1.iso",
+  "virtualbox_guest_os_type": "Debian_64",
+  "vmware_guest_os_type": "debian9-64",
+  "version": "1.0.0",
+  "version_description": "Initial Release of Debian 9 (Stretch) Vagrant boxes, based on RC4"
+}

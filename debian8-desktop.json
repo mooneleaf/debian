@@ -9,6 +9,6 @@
   "iso_name": "debian-8.8.0-amd64-DVD-1.iso",
   "iso_url": "http://cdimage.debian.org/cdimage/release/8.8.0/amd64/iso-dvd/debian-8.8.0-amd64-DVD-1.iso",
   "memory": "1024",
-  "preseed" : "preseed.cfg",
+  "preseed": "preseed.cfg",
   "vagrantfile_template": "tpl/vagrantfile-debian-desktop.tpl"
 }
