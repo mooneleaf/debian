@@ -6,6 +6,6 @@
   "iso_url": "http://cdimage.debian.org/cdimage/release/8.8.0/amd64/iso-dvd/debian-8.8.0-amd64-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian_64",
   "vmware_guest_os_type": "debian8-64",
-  "version": "1.0.3",
-  "version_description": ""
+  "version": "1.1.0",
+  "version_description": "- Using EXT4 filesystem"
 }

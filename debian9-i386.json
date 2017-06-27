@@ -1,11 +1,11 @@
 {
   "_comment": "Build with `packer build -var-file=debian9-i386.json debian.json`",
   "vm_name": "debian9-i386",
-  "iso_checksum": "1a702aeaef9ec84a30d6b070720dd035b9e23b35",
-  "iso_name": "debian-stretch-DI-rc4-i386-DVD-1.iso",
-  "iso_url": "http://cdimage.debian.org/cdimage/stretch_di_rc4/i386/iso-dvd/debian-stretch-DI-rc4-i386-DVD-1.iso",
+  "iso_checksum": "e749132d5c4208e32023be5178165096d9669935",
+  "iso_name": "debian-9.0.0-i386-DVD-1.iso",
+  "iso_url": "https://cdimage.debian.org/debian-cd/current/i386/iso-dvd/debian-9.0.0-i386-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian",
   "vmware_guest_os_type": "debian9",
-  "version": "1.0.0",
-  "version_description": "Initial Release of Debian 9 (Stretch) Vagrant boxes, based on RC4"
+  "version": "1.2.0",
+  "version_description": "Debian 9.0 Release"
 }

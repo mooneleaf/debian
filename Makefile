@@ -1,48 +1,51 @@
-BOX_VERSION ?= $(shell cat VERSION)
-BOX_SUFFIX := -$(BOX_VERSION).box
+ISO_HELPER := ./bin/iso-helper.sh
+BOX_SUFFIX := .box
 BUILDER_TYPES ?= vmware virtualbox parallels
-TEMPLATE_FILENAMES := $(filter-out debian.json,$(wildcard *.json))
+BASE_FILE = debian.json
+TEMPLATE_FILENAMES := $(filter-out $(BASE_FILE),$(wildcard *.json))
 BOX_NAMES := $(basename $(TEMPLATE_FILENAMES))
 BOX_FILENAMES := $(TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
+BOX_FILES := $(foreach type, $(BUILDER_TYPES), $(addprefix box/$(type)/,$(BOX_FILENAMES)))
+
 VMWARE_BOX_DIR ?= box/vmware
-VMWARE_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
-VMWARE_BOX_FILENAMES := $(VMWARE_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
-VMWARE_BOX_FILES := $(foreach box_filename, $(VMWARE_BOX_FILENAMES), $(VMWARE_BOX_DIR)/$(box_filename))
+#VMWARE_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
+#VMWARE_BOX_FILENAMES := $(VMWARE_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
+VMWARE_BOX_FILES := $(addprefix box/vmware/,$(BOX_FILENAMES))
 VIRTUALBOX_BOX_DIR ?= box/virtualbox
-VIRTUALBOX_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
-VIRTUALBOX_BOX_FILENAMES := $(VIRTUALBOX_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
-VIRTUALBOX_BOX_FILES := $(foreach box_filename, $(VIRTUALBOX_BOX_FILENAMES), $(VIRTUALBOX_BOX_DIR)/$(box_filename))
+#VIRTUALBOX_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
+#VIRTUALBOX_BOX_FILENAMES := $(VIRTUALBOX_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
+VIRTUALBOX_BOX_FILES := $(addprefix box/virtualbox/,$(BOX_FILENAMES))
 PARALLELS_BOX_DIR ?= box/parallels
-PARALLELS_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
-PARALLELS_BOX_FILENAMES := $(PARALLELS_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
-PARALLELS_BOX_FILES := $(foreach box_filename, $(PARALLELS_BOX_FILENAMES), $(PARALLELS_BOX_DIR)/$(box_filename))
-BOX_FILES := $(VMWARE_BOX_FILES) $(VIRTUALBOX_BOX_FILES) $(PARALLELS_BOX_FILES)
-ISO_FILES := $(shell sed -nE 's/^.*iso_name.*:\s*"([^"]+\.iso)".*$$/iso\/\1/p' $(TEMPLATE_FILENAMES))
+#PARALLELS_TEMPLATE_FILENAMES = $(TEMPLATE_FILENAMES)
+#PARALLELS_BOX_FILENAMES := $(PARALLELS_TEMPLATE_FILENAMES:.json=$(BOX_SUFFIX))
+PARALLELS_BOX_FILES := $(addprefix box/parallels/,$(BOX_FILENAMES))
 
-box/vmware/%$(BOX_SUFFIX) box/virtualbox/%$(BOX_SUFFIX) box/parallels/%$(BOX_SUFFIX): %.json
-	bin/box build $<
+#BOX_FILES := $(VMWARE_BOX_FILES) $(VIRTUALBOX_BOX_FILES) $(PARALLELS_BOX_FILES)
+ISO_PATH := $(shell jq --raw-output '.variables.iso_path' $(BASE_FILE))
+ISO_FILES := $(addprefix $(ISO_PATH)/, $(TEMPLATE_FILENAMES:json=iso))
 
-.PHONY: all clean isos assure deliver assure_atlas assure_atlas_vmware assure_atlas_virtualbox assure_atlas_parallels
+MAKEFLAGS += --no-builtin-rules
+.SUFFIXES:
+
+build: $(BOX_FILES)
 
 all: isos build assure deliver
 
-iso/%.iso:
-	mkdir -p iso
-	@cd iso && ( \
-		CURRENT_URL="http://cdimage.debian.org/debian-cd/$(shell echo "$@" | cut -d- -f2,3 --output-delimiter=/)/jigdo-dvd/$(notdir $(basename $@)).jigdo" ; \
-		ARCHIVE_URL="http://cdimage.debian.org/mirror/cdimage/archive/$(shell echo "$@" | cut -d- -f2,3 --output-delimiter=/)/jigdo-dvd/$(notdir $(basename $@)).jigdo" ; \
-		\
-		if curl -sfI "$$CURRENT_URL" >/dev/null ; then \
-			URL="$$CURRENT_URL" ; \
-		else \
-			URL="$$ARCHIVE_URL" ; \
-		fi ; \
-		jigdo-lite --noask "$$URL" ; \
-	)
-
 isos: $(ISO_FILES)
 
-build: $(BOX_FILES)
+parallels: $(PARALLELS_BOX_FILES)
+
+vmware: $(VMWARE_BOX_FILES)
+
+virtualbox: $(VIRTUALBOX_BOX_FILES)
+
+$(TEMPLATE_FILENAMES): $(BASE_FILE)
+
+$(VMWARE_BOX_DIR)/%$(BOX_SUFFIX) $(VIRTUALBOX_BOX_DIR)/%$(BOX_SUFFIX) $(PARALLELS_BOX_DIR)/%$(BOX_SUFFIX): %.json $(ISO_PATH)/%.iso
+	packer build -only=$$(basename $$(dirname $@)) -var-file=$< $(BASE_FILE)
+
+$(ISO_PATH)/%.iso: %.json
+	$(ISO_HELPER) $@ $< $(BASE_FILE)
 
 assure: assure_vmware assure_virtualbox assure_parallels
 
@@ -111,3 +114,4 @@ clean:
 		rm -rf iso ; \
 	fi ;
 
+.PHONY: all clean isos assure deliver parallels vmware virtualbox assure_atlas assure_atlas_vmware assure_atlas_virtualbox assure_atlas_parallels
