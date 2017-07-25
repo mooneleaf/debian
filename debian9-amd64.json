@@ -1,11 +1,11 @@
 {
   "_comment": "Build with `packer build -var-file=debian9-amd64.json debian.json`",
   "vm_name": "debian9-amd64",
-  "iso_checksum": "82d49fa7bae2a5a8341d6900bfabb2ecfd28dbd1",
-  "iso_name": "debian-9.0.0-amd64-DVD-1.iso",
-  "iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-9.0.0-amd64-DVD-1.iso",
+  "iso_checksum": "bc256f0e971183ee2e5b9fc72368a2fd670ba75b",
+  "iso_name": "debian-9.1.0-amd64-DVD-1.iso",
+  "iso_url": "https://cdimage.debian.org/debian-cd/9.1.0/amd64/iso-dvd/debian-9.1.0-amd64-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian_64",
   "vmware_guest_os_type": "debian9-64",
-  "version": "1.2.0",
-  "version_description": "Debian 9.0 Release"
+  "version": "1.3.0",
+  "version_description": "-Debian 9.1\n-Parallels Tools version 12.2.1\nVirtualbox Guest Additions 5.1.24"
 }
