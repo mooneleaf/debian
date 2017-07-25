@@ -11,7 +11,7 @@ echo "==> Customizing message of the day"
 mkdir -p /etc/update-motd.d
 motd_original_release_file=/etc/update-motd.d/00-original-release
 printf "#!/bin/sh -eu\n" > ${motd_original_release_file}
-printf 'echo "%-20s %s (%s)"\n' 'Vagrant box name:' "$VM_NAME" "$PACKER_BUILDER_TYPE" >> ${motd_original_release_file}
+printf 'echo "%-20s %s %s (%s)"\n' 'Vagrant box:' "${BOX_ORG}/${VM_NAME}" "${BOX_VERSION}" "${PACKER_BUILD_NAME}" >> ${motd_original_release_file}
 printf 'echo "%-20s %s"\n' "Build date:" "$(date +%Y-%m-%d)" >> ${motd_original_release_file}
 printf 'echo "%-20s %s"\n' "Build Release:" "$(lsb_release -sd)" >> ${motd_original_release_file}
 

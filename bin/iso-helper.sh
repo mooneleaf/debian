@@ -29,7 +29,7 @@ iso_helper() {
 		which aria2c > /dev/null
 		echo "Downloading using aria2"
 
-		aria2c --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$(dirname "${target}")" --out "$(basename "${target}")" --checksum "sha-$(sum_type)=$(sum_value)" "${url}"
+		aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$(dirname "${target}")" --out "$(basename "${target}")" --checksum "sha-$(sum_type)=$(sum_value)" "${url}"
 	}
 
 	curl_download() {
@@ -45,7 +45,7 @@ iso_helper() {
 
 		echo "Downloading ${isoURL}"
 
-		aria2c_download "${isoURL}"  || curl_download "${isoURL}"
+		aria2c_download "${isoURL}" || curl_download "${isoURL}"
 	}
 
 	touch_iso() {
