@@ -1,11 +1,11 @@
 {
   "_comment": "Build with `packer build -var-file=debian9-i386.json debian.json`",
   "vm_name": "debian9-i386",
-  "iso_checksum": "17a85491927120c6483e6fba734514d98259926c",
-  "iso_name": "debian-9.1.0-i386-DVD-1.iso",
-  "iso_url": "https://cdimage.debian.org/debian-cd/9.1.0/i386/iso-dvd/debian-9.1.0-i386-DVD-1.iso",
+  "iso_checksum": "448e47cc5867e09ea81ab7059cf23bc0c248fcdb",
+  "iso_name": "debian-9.2.0-i386-DVD-1.iso",
+  "iso_url": "https://cdimage.debian.org/debian-cd/9.2.0/i386/iso-dvd/debian-9.2.0-i386-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian",
   "vmware_guest_os_type": "debian9",
-  "version": "1.3.0",
-  "version_description": "-Debian 9.1\n-Parallels Tools version 12.2.1\nVirtualbox Guest Additions 5.1.24"
+  "version": "1.4.0",
+  "version_description": "- Debian 9.2\n- Parallels Tools version 13.1.0\n- Virtualbox Guest Additions 5.1.28"
 }

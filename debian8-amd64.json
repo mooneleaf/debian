@@ -6,6 +6,6 @@
   "iso_url": "http://cdimage.debian.org/cdimage/archive/8.9.0/amd64/iso-dvd/debian-8.9.0-amd64-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian_64",
   "vmware_guest_os_type": "debian8-64",
-  "version": "1.2.0",
-  "version_description": "-Debian 8.9\n-Parallels Tools version 12.2.1\nVirtualbox Guest Additions 5.1.24"
+  "version": "1.2.1",
+  "version_description": "- Parallels Tools version 13.1.0\n- Virtualbox Guest Additions 5.1.28"
 }
