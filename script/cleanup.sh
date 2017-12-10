@@ -1,18 +1,18 @@
-#!/bin/bash -eux
+#!/bin/sh -eu
 
 # Make sure Udev doesn't block our network
 # http://6.ptmc.org/?p=164
-echo "cleaning up udev rules"
-rm -rf /dev/.udev/
+printf "==> %s\n" "Cleaning up udev rules"
+rm -rfv /dev/.udev/
 # Better fix that persists package updates: http://serverfault.com/a/485689
 touch /etc/udev/rules.d/75-persistent-net-generator.rules
 
-echo "==> Cleaning up leftover dhcp leases"
+printf "==> %s\n" "Cleaning up leftover dhcp leases"
 if [ -d "/var/lib/dhcp" ]; then
-    rm /var/lib/dhcp/*
+    rm -fv /var/lib/dhcp/*
 fi
 
-echo "==> Cleaning up tmp"
+printf "==> %s\n" "Cleaning up tmp"
 rm -rf /tmp/*
 
 # Cleanup apt cache
@@ -20,39 +20,38 @@ apt-get -y autoremove --purge
 apt-get -y clean
 apt-get -y autoclean
 
-echo "==> Installed packages"
+printf "==> %s\n" "Installed packages"
 dpkg --get-selections | grep -v deinstall
 
 DISK_USAGE_BEFORE_CLEANUP="$(df -h)"
 
 # Remove Bash history
 unset HISTFILE
-rm -f /root/.bash_history
-rm -f /home/vagrant/.bash_history
+rm -fv /root/.bash_history
+rm -fv /home/vagrant/.bash_history
 
 # Clean up log files
-find /var/log -type f | while read f; do echo -ne '' > $f; done;
+find /var/log -type f | while read f; do printf '' > "${f}"; done;
 
-echo "==> Clearing last login information"
->/var/log/lastlog
->/var/log/wtmp
->/var/log/btmp
+printf "==> %s\n" "Clearing last login information"
+printf '' > /var/log/lastlog
+printf '' > /var/log/wtmp
+printf '' > /var/log/btmp
 
 # Whiteout root
-echo '==> Clear out root fs'
-count=$(df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}')
-let count--
-dd if=/dev/zero of=/tmp/whitespace bs=1024 count=$count || echo "dd exit code $? is suppressed"
-rm -f /tmp/whitespace
+printf "==> %s\n" "Clear out root fs"
+count=$(( $(df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}') - 1 ))
+
+dd if=/dev/zero of=/tmp/whitespace bs=1024 count=${count} || printf "dd exit code %d is suppressed\n" $?
+rm -fv /tmp/whitespace
 
 # Whiteout /boot
-echo '==> Clear out /boot'
-count=$(df --sync -kP /boot | tail -n1 | awk -F ' ' '{print $4}')
-let count--
-dd if=/dev/zero of=/boot/whitespace bs=1024 count=$count || echo "dd exit code $? is suppressed"
-rm -f /boot/whitespace
+printf "==> %s\n" "Clear out /boot"
+count=$(( $(df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}') - 1 ))
+dd if=/dev/zero of=/boot/whitespace bs=1024 count=$count || printf "dd exit code %d is suppressed\n" $?
+rm -fv /boot/whitespace
 
-echo '==> Clear out swap and disable until reboot'
+printf "==> %s\n" "Clear out swap and disable until reboot"
 set +e
 swapuuid=$(/sbin/blkid -o value -l -s UUID -t TYPE=swap)
 case "$?" in
@@ -60,7 +59,7 @@ case "$?" in
     *) exit 1 ;;
 esac
 set -e
-if [ "x${swapuuid}" != "x" ]; then
+if [ -n "${swapuuid}" ]; then
     # Whiteout the swap partition to reduce box size
     # Swap is disabled till reboot
     swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
@@ -70,11 +69,11 @@ if [ "x${swapuuid}" != "x" ]; then
 fi
 
 # Make sure we wait until all the data is written to disk, otherwise
-# Packer might quite too early
+# Packer might quit too early
 sync
 
-echo "==> Disk usage before cleanup"
-echo "${DISK_USAGE_BEFORE_CLEANUP}"
+printf "==> %s\n" "Disk usage before cleanup"
+printf "%s\n" "${DISK_USAGE_BEFORE_CLEANUP}"
 
-echo "==> Disk usage after cleanup"
+printf "==> %s\n" "Disk usage after cleanup"
 df -h

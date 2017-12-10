@@ -6,6 +6,6 @@
   "iso_url": "http://cdimage.debian.org/cdimage/archive/7.11.0/i386/iso-dvd/debian-7.11.0-i386-DVD-1.iso",
   "virtualbox_guest_os_type": "Debian",
   "vmware_guest_os_type": "debian7",
-  "version": "1.1.2",
-  "version_description": "- Parallels Tools version 13.1.0\n- Virtualbox Guest Additions 5.1.28"
+  "version": "1.1.4",
+  "version_description": "- Parallels Tools version 13.2.0\n- Virtualbox Guest Additions 5.2.2"
 }

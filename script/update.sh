@@ -1,12 +1,15 @@
-#!/bin/bash -eux
+#!/bin/sh -eu
 
-if [[ $UPDATE  =~ true || $UPDATE =~ 1 || $UPDATE =~ yes ]]; then
-	echo "==> Updating list of repositories"
-    # apt-get update does not actually perform updates, it just downloads and indexes the list of packages
-    apt-get -y update
+case "$(printf "%s" "${UPDATE:-}" | tr '[:upper:]' '[:lower:]')" in
+	true|yes|on|1)
+		printf "==> %s" "Updating list of repositories"
+		apt-get -y update
 
-    echo "==> Performing dist-upgrade (all packages and kernel)"
-    apt-get -y dist-upgrade --force-yes
-    ifdown --all
-    shutdown -r now
-fi
+		printf "==> %s" "Performing dist-upgrade (all packages and kernel)"
+		apt-get -y dist-upgrade --force-yes
+		printf "==> %s" "Rebooting"
+		nohup shutdown --reboot now </dev/null >/dev/null 2>&1 &
+	;;
+esac
+
+

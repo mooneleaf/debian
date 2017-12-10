@@ -1,12 +1,12 @@
-#!/bin/bash -eux
+#!/bin/sh -eu
 
-SSH_USER=${SSH_USERNAME:-vagrant}
+SSH_USER="${SSH_USERNAME:-vagrant}"
 
-if [[ $PACKER_BUILDER_TYPE =~ parallels ]]; then
-    echo "==> Installing Parallels tools"
+if [ "${PACKER_BUILDER_TYPE}" = "parallels-iso" ]; then
+    printf "==> %s" "Installing Parallels tools"
     mount -o loop /home/${SSH_USER}/prl-tools-lin.iso /mnt
     /mnt/install --install-unattended-with-deps
     umount /mnt
-    rm -rf /home/${SSH_USER}/prl-tools-lin.iso
-    rm -f /home/${SSH_USER}/.prlctl_version
+    rm -rfv /home/${SSH_USER}/prl-tools-lin.iso
+    rm -fv /home/${SSH_USER}/.prlctl_version
 fi

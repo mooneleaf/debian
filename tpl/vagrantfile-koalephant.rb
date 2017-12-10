@@ -1,3 +1,3 @@
-Vagrant.configure("2") do |config|
-	config.ssh.shell = "sh"
+Vagrant.configure('2') do |config|
+	config.ssh.shell = 'sh'
 end

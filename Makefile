@@ -11,6 +11,16 @@ ISO_PATH ?= iso
 
 TEMPLATE_FILENAMES := $(wildcard debian*-*.json)
 
+# Todo: convert to a template with a configure script
+# Makefile then depends on the json files + the configure script
+# Configure script:
+# - detects which DL tool to use
+# - sets up rules for DL by hash
+# 	- ISO depends on %.sum
+#	- %.sum runs always (depend on FORCE)
+#   - %.sum  
+
+
 # Callable functions
 
 # Query a template using jq. Args: template file, jq query
@@ -51,5 +61,8 @@ isos: $(ISO_NAMES)
 
 %.iso: $$(call iso_config_file,$$(shell basename $$@)) $(BASE_FILE)
 	$(ISO_HELPER) $@ $< $(BASE_FILE)
+
+print-%:
+	@echo '$*=$($*)'
 
 .PHONY: all isos
