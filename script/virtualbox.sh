@@ -3,7 +3,7 @@
 SSH_USER="${SSH_USERNAME:-vagrant}"
 
 if [ "${PACKER_BUILDER_TYPE}" = "virtualbox-iso" ]; then
-    printf "==> %s" "Installing VirtualBox guest additions"
+    printf "==> %s\n" "Installing VirtualBox guest additions"
     apt-get install -y linux-headers-$(uname -r) build-essential perl
     apt-get install -y dkms
 
