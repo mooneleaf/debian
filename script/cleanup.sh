@@ -64,7 +64,7 @@ if [ -n "${swapuuid}" ]; then
     # Swap is disabled till reboot
     swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
     /sbin/swapoff "${swappart}"
-    dd if=/dev/zero of="${swappart}" bs=1M || echo "dd exit code $? is suppressed"
+    dd if=/dev/zero of="${swappart}" bs=1M || printf "dd exit code %d is suppressed\n" "$?"
     /sbin/mkswap -U "${swapuuid}" "${swappart}"
 fi
 

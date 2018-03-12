@@ -1,7 +1,7 @@
 #!/bin/sh -eu
 
 purge_packages() {
-	echo "$@" | xargs -n 1 apt-cache --generate pkgnames | xargs apt-get -y purge
+	printf "%s\n" "$@" | xargs -n 1 apt-cache --generate pkgnames | xargs apt-get -y purge
 }
 
 printf "==> %s\n" "Installed packages before cleanup"
@@ -16,20 +16,6 @@ printf "==> %s\n" "Removing linux source"
 dpkg --list | awk '{ print $2 }' | grep linux-source | xargs apt-get -y purge
 printf "==> %s\n" "Removing development packages"
 dpkg --list | awk '{ print $2 }' | grep -- '-dev$' | xargs apt-get -y purge
-
-
-case "$(printf "%s" "${REMOVE_DOCS:-}" | tr '[:upper:]' '[:lower:]')" in
-	true|yes|on|1)
-		printf "==> %s\n" "Removing documentation"
-		dpkg --list | awk '{ print $2 }' | grep -- '-doc$' | xargs apt-get -y purge
-		printf "==> %s\n" "Removing man pages"
-		find /usr/share/man -type f -delete
-		printf "==> %s\n" "Removing any docs"
-		find /usr/share/doc -type f -delete
-		printf "==> %s\n" "Removing info"
-		rm -rfv /usr/share/info/*
-	;;
-esac
 
 purge_packages build-essential
 

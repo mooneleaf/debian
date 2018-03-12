@@ -26,14 +26,15 @@
 				"{{ user `iso_path` }}/{{ user `vm_name` }}.iso",
 				"{{ user `iso_url` }}"
 			],
+			"network": "nat",
 			"output_directory": "output-{{ user `vm_name` }}-vmware-iso",
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
 			"ssh_wait_timeout": "10000s",
-			"tools_upload_flavor": "linux",
 			"vm_name": "{{ user `vm_name` }}",
 			"vmx_data": {
+
 				"memsize": "{{ user `memory` }}",
 				"numvcpus": "{{ user `cpus` }}"
 			}
@@ -198,7 +199,8 @@
 				"box_tag": "{{ user `vagrantcloud_org` }}/{{ user `vm_name` }}",
 				"access_token": "{{user `vagrantcloud_token`}}",
 				"version": "{{user `version`}}",
-				"version_description": "{{ user `version_description` }}"
+				"version_description": "{{ user `version_description` }}",
+				"no_release": "{{ user `no_release` }}"
 			}
 		]
 	],
@@ -206,7 +208,6 @@
 		{
 			"environment_vars": [
 				"MOTD={{user `motd`}}",
-				"REMOVE_DOCS={{user `remove_docs`}}",
 				"UPDATE={{user `update`}}",
 				"INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
 				"SSH_USERNAME={{user `ssh_username`}}",
@@ -224,6 +225,7 @@
 			"scripts": [
 				"script/remove-cdrom-sources.sh",
 				"script/systemd.sh",
+				"script/grub.sh",
 				"script/update.sh"
 			],
 			"type": "shell",
@@ -233,7 +235,6 @@
 		{
 			"environment_vars": [
 				"MOTD={{user `motd`}}",
-				"REMOVE_DOCS={{user `remove_docs`}}",
 				"UPDATE={{user `update`}}",
 				"INSTALL_VAGRANT_KEY={{user `install_vagrant_key`}}",
 				"SSH_USERNAME={{user `ssh_username`}}",
@@ -277,10 +278,10 @@
 		"memory": "512",
 		"motd": "true",
 		"no_proxy": "{{env `no_proxy`}}",
+		"no_release": "true",
 		"parallels_guest_os_type": "debian",
 		"preseed": "preseed.cfg",
 		"rsync_proxy": "{{env `rsync_proxy`}}",
-		"remove_docs": "false",
 		"ssh_password": "vagrant",
 		"ssh_username": "vagrant",
 		"update": "true",

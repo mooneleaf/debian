@@ -1,11 +1,11 @@
 {
-  "_comment": "Build with `packer build -var-file=debian8-amd64.json debian.json`",
-  "vm_name": "debian8-amd64",
-  "iso_checksum": "7183d7e7c0cd1716439b44fcc932f4d4f6203f72",
-  "iso_name": "debian-8.9.0-amd64-DVD-1.iso",
-  "iso_url": "http://cdimage.debian.org/cdimage/archive/8.9.0/amd64/iso-dvd/debian-8.9.0-amd64-DVD-1.iso",
-  "virtualbox_guest_os_type": "Debian_64",
-  "vmware_guest_os_type": "debian8-64",
-  "version": "1.2.3",
-  "version_description": "- Parallels Tools version 13.2.0\n- Virtualbox Guest Additions 5.2.2"
+	"_comment": "Build with `packer build -var-file=debian8-amd64.json debian.json`",
+	"vm_name": "debian8-amd64",
+	"iso_checksum": "a2e3bf4dfce4a1fd6756049cb272d7f5e86bf0da",
+	"iso_name": "debian-8.10.0-amd64-DVD-1.iso",
+	"iso_url": "http://cdimage.debian.org/cdimage/archive/8.10.0/amd64/iso-dvd/debian-8.10.0-amd64-DVD-1.iso",
+	"virtualbox_guest_os_type": "Debian_64",
+	"vmware_guest_os_type": "debian8-64",
+	"version": "2.0.0",
+	"version_description": "- Debian 8.11.0\n- Parallels Tools version 13.3.0\n- Virtualbox Guest Additions 5.2.8\n- VMWare Tools 10.1.1\n- Added simplified Vagrant helpers for Name, CPU and Memory"
 }

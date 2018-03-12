@@ -1,11 +1,11 @@
 {
-  "_comment": "Build with `packer build -var-file=debian9-amd64.json debian.json`",
-  "vm_name": "debian9-amd64",
-  "iso_checksum": "995a04fbe0037bbcec5e7075b8d39e1ced676a25",
-  "iso_name": "debian-9.3.0-amd64-DVD-1.iso",
-  "iso_url": "http://cdimage.debian.org/cdimage/release/9.3.0/amd64/iso-dvd/debian-9.3.0-amd64-DVD-1.iso",
-  "virtualbox_guest_os_type": "Debian_64",
-  "vmware_guest_os_type": "debian9-64",
-  "version": "1.5.0",
-  "version_description": "- Debian 9.3.0"
+	"_comment": "Build with `packer build -var-file=debian9-amd64.json debian.json`",
+	"vm_name": "debian9-amd64",
+	"iso_checksum": "0f5b490e246a8c01d6540539f3ad22738c99ad4c",
+	"iso_name": "debian-9.4.0-amd64-DVD-1.iso",
+	"iso_url": "https://cdimage.debian.org/debian-cd/current/amd64/iso-dvd/debian-9.4.0-amd64-DVD-1.iso",
+	"virtualbox_guest_os_type": "Debian_64",
+	"vmware_guest_os_type": "debian9-64",
+	"version": "2.0.0",
+	"version_description": "- Debian 9.3.0\n- Parallels Tools version 13.3.0\n- Virtualbox Guest Additions 5.2.8\n- VMWare Tools 10.1.1\n- Added simplified Vagrant helpers for Name, CPU and Memory"
 }
