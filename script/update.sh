@@ -2,8 +2,6 @@
 
 case "$(printf "%s" "${UPDATE:-}" | tr '[:upper:]' '[:lower:]')" in
 	true|yes|on|1)
-		printf "==> %s\n" "Updating list of repositories"
-		apt-get -y update
 
 		printf "==> %s\n" "Performing dist-upgrade (all packages and kernel)"
 		apt-get -y dist-upgrade --force-yes

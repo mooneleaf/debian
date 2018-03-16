@@ -17,3 +17,6 @@ case "$(printf "%s" "${APT_BACKPORTS:-}" | tr '[:upper:]' '[:lower:]')" in
 		add_apt_component "-backports" >> /etc/apt/sources.list
 	;;
 esac
+
+printf "==> %s\n" "Updating package index"
+apt-get -y update
