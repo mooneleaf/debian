@@ -5,7 +5,7 @@ PACKER := packer
 ISO_HELPER := ./bin/iso-helper.sh
 BOX_SUFFIX := .box
 BUILDER_TYPES ?= vmware virtualbox parallels
-BASE_FILE := debian.json
+BASE_FILE ?= debian.json
 BOX_DIR := box
 ISO_PATH ?= iso
 

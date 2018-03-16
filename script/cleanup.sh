@@ -9,8 +9,13 @@ touch /etc/udev/rules.d/75-persistent-net-generator.rules
 
 printf "==> %s\n" "Cleaning up leftover dhcp leases"
 if [ -d "/var/lib/dhcp" ]; then
-    rm -fv /var/lib/dhcp/*
+	rm -fv /var/lib/dhcp/*
 fi
+
+# cleanup systemd machine-id. see https://salsa.debian.org/cloud-team/vagrant-boxes/blob/master/helpers/vagrant-setup#L103
+printf "==> %s\n" "Cleaning up dbus machine ID"
+rm -fv /var/lib/dbus/machine-id
+printf "" > /etc/machine-id
 
 printf "==> %s\n" "Cleaning up tmp"
 rm -rf /tmp/*
@@ -55,17 +60,17 @@ printf "==> %s\n" "Clear out swap and disable until reboot"
 set +e
 swapuuid=$(/sbin/blkid -o value -l -s UUID -t TYPE=swap)
 case "$?" in
-    2|0) ;;
-    *) exit 1 ;;
+	2|0) ;;
+	*) exit 1 ;;
 esac
 set -e
 if [ -n "${swapuuid}" ]; then
-    # Whiteout the swap partition to reduce box size
-    # Swap is disabled till reboot
-    swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
-    /sbin/swapoff "${swappart}"
-    dd if=/dev/zero of="${swappart}" bs=1M || printf "dd exit code %d is suppressed\n" "$?"
-    /sbin/mkswap -U "${swapuuid}" "${swappart}"
+	# Whiteout the swap partition to reduce box size
+	# Swap is disabled till reboot
+	swappart=$(readlink -f /dev/disk/by-uuid/$swapuuid)
+	/sbin/swapoff "${swappart}"
+	dd if=/dev/zero of="${swappart}" bs=1M || printf "dd exit code %d is suppressed\n" "$?"
+	/sbin/mkswap -U "${swapuuid}" "${swappart}"
 fi
 
 # Make sure we wait until all the data is written to disk, otherwise

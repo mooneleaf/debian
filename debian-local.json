@@ -187,22 +187,12 @@
 		}
 	],
 	"post-processors": [
-		[
-			{
-				"type": "vagrant",
-				"keep_input_artifact": false,
-				"output": "box/{{ user `vm_name` }}/{{ user `version` }}/{{.Provider}}.box",
-				"vagrantfile_template": "{{ user `vagrantfile_template` }}"
-			},
-			{
-				"type": "vagrant-cloud",
-				"box_tag": "{{ user `vagrantcloud_org` }}/{{ user `vm_name` }}",
-				"access_token": "{{user `vagrantcloud_token`}}",
-				"version": "{{user `version`}}",
-				"version_description": "{{ user `version_description` }}",
-				"no_release": "{{ user `no_release` }}"
-			}
-		]
+		{
+			"type": "vagrant",
+			"keep_input_artifact": false,
+			"output": "box/{{ user `vm_name` }}/{{ user `version` }}/{{.Provider}}.box",
+			"vagrantfile_template": "{{ user `vagrantfile_template` }}"
+		}
 	],
 	"provisioners": [
 		{

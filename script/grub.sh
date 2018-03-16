@@ -1,15 +1,7 @@
 #!/bin/sh -eu
-
 printf "==> %s\n" "Removing grub timeout"
 
-cat <<-EOF > /etc/default/grub
-	# If you change this file, run 'update-grub' afterwards to update
-	# /boot/grub/grub.cfg.
-	GRUB_DEFAULT=0
-	GRUB_TIMEOUT=0
-	GRUB_DISTRIBUTOR=$(lsb_release -i -s 2> /dev/null || printf "%s\n" 'Debian')
-	GRUB_CMDLINE_LINUX_DEFAULT="quiet"
-	GRUB_CMDLINE_LINUX="debian-installer=en_US"
-EOF
-
-update-grub
+if [ -f /etc/default/grub ]; then
+	sed -i -E -e s/GRUB_TIMEOUT=.+/GRUB_TIMEOUT=0/ /etc/default/grub
+	update-grub
+fi

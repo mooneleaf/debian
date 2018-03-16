@@ -32,7 +32,7 @@ printf "==> %s\n" "Removing other oddities"
 purge_packages popularity-contest installation-report wireless-tools wpasupplicant
 
 printf "==> %s\n" "Removing default system Ruby"
-purge_packages ruby ri libffi5
+purge_packages ruby ri
 
 printf "==> %s\n" "Removing default system Python"
 purge_packages python-dbus libnl1 python-smartpm python-twisted-core libiw30 python-twisted-bin libdbus-glib-1-2 python-pexpect python-pycurl python-serial python-gobject python-pam python-openssl

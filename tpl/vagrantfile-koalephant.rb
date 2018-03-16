@@ -1,9 +1,9 @@
 Vagrant.configure('2') do |config|
 	config.ssh.shell = 'sh'
 
-	NAME ||= nil
-	CPUS ||= 1
-	MEMORY ||= 512
+	NAME = nil unless defined? NAME
+	CPUS = 1 unless defined? CPUS
+	MEMORY = 512 unless defined? MEMORY
 
 	[:vmware_workstation, :vmware_fusion].each do |provider|
 		config.vm.provider(provider) do |vm|
