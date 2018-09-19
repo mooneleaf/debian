@@ -1,3 +1,4 @@
+
 Vagrant.configure('2') do |config|
 	config.ssh.shell = 'sh'
 
@@ -5,7 +6,7 @@ Vagrant.configure('2') do |config|
 	CPUS = 1 unless defined? CPUS
 	MEMORY = 512 unless defined? MEMORY
 
-	[:vmware_workstation, :vmware_fusion].each do |provider|
+	[:vmware_workstation, :vmware_fusion, :vmware_desktop].each do |provider|
 		config.vm.provider(provider) do |vm|
 			vm.whitelist_verified = true
 			vm.vmx[:numvcpus] = ::CPUS
@@ -26,3 +27,4 @@ Vagrant.configure('2') do |config|
 		end
 	end
 end
+
