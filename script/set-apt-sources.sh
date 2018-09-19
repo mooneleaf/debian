@@ -10,7 +10,11 @@ add_apt_component() {
 
 add_apt_component > /etc/apt/sources.list
 add_apt_component "-updates" >> /etc/apt/sources.list
-add_apt_component "/updates" 'http://security.debian.org/' >> /etc/apt/sources.list
+if [ "${APT_MIRROR}" = 'http://deb.debian.org/debian' ] || [ "${APT_MIRROR}" = 'https://deb.debian.org/debian' ]; then
+	add_apt_component "/updates" "${APT_MIRROR}-security" >> /etc/apt/sources.list
+else
+	add_apt_component "/updates" 'http://security.debian.org/' >> /etc/apt/sources.list
+fi
 
 case "$(printf "%s" "${APT_BACKPORTS:-}" | tr '[:upper:]' '[:lower:]')" in
 	true|yes|on|1)

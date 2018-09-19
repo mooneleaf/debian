@@ -53,7 +53,7 @@ rm -fv /tmp/whitespace
 # Whiteout /boot
 printf "==> %s\n" "Clear out /boot"
 count=$(( $(df --sync -kP / | tail -n1  | awk -F ' ' '{print $4}') - 1 ))
-dd if=/dev/zero of=/boot/whitespace bs=1024 count=$count || printf "dd exit code %d is suppressed\n" $?
+dd if=/dev/zero of=/boot/whitespace bs=1024 count=${count} || printf "dd exit code %d is suppressed\n" $?
 rm -fv /boot/whitespace
 
 printf "==> %s\n" "Clear out swap and disable until reboot"

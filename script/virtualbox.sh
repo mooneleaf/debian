@@ -14,5 +14,5 @@ if [ "${PACKER_BUILDER_TYPE}" = "virtualbox-iso" ]; then
 	rm -fv "/home/${SSH_USER}/VBoxGuestAdditions_${VBOX_VERSION}.iso"
 	rm -fv "/home/${SSH_USER}/.vbox_version"
 
-	printf "%s\n" "${VBOX_VERSION}" > /tmp/guest-additions-version.txt
+	printf -- "- VirtualBox Guest Additions version %s\n" "${VBOX_VERSION}" > /tmp/guest-additions-version.txt
 fi

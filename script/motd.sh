@@ -31,3 +31,7 @@ case "$(printf "%s" "${MOTD:-}" | tr '[:upper:]' '[:lower:]')" in
 
 esac
 
+if [ ! -e /etc/update-motd.d/10-uname ]; then
+	printf "%s\n%s\n" "#!/bin/sh" "uname -snrvm" > /etc/update-motd.d/10-uname
+fi
+
