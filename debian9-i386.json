@@ -1,11 +1,10 @@
 {
 	"_comment": "Build with `packer build -var-file=debian9-i386.json debian.json`",
 	"vm_name": "debian9-i386",
-	"iso_checksum": "d20803c6aee373a933899afe5af8507092e105dd",
-	"iso_name": "debian-9.4.0-i386-DVD-1.iso",
-	"iso_url": "https://cdimage.debian.org/debian-cd/current/i386/iso-dvd/debian-9.4.0-i386-DVD-1.iso",
+	"iso_checksum": "cdb1c9a1d66dc635185bee8d195b4590fa38a13c",
+	"iso_name": "debian-9.5.0-i386-DVD-1.iso",
+	"iso_url": "http://cdimage.debian.org/cdimage/release/9.5.0/i386/iso-dvd/debian-9.5.0-i386-DVD-1.iso",
 	"virtualbox_guest_os_type": "Debian",
 	"vmware_guest_os_type": "debian9",
-	"version": "2.0.0",
-	"version_description": "- Debian 9.3.0\n- Parallels Tools version 13.3.0\n- Virtualbox Guest Additions 5.2.8\n- VMWare Tools 10.1.1\n- Added simplified Vagrant helpers for Name, CPU and Memory"
+	"version": "2.1.0"
 }
