@@ -270,7 +270,7 @@
 		{
 			"type": "file",
 			"source": "/tmp/guest-additions-version.txt",
-			"destination": "versions/{{user `vm_name`}}/{{.Provider}}.txt",
+			"destination": "box/{{user `vm_name`}}/{{user `version`}}/{{build_name}}.version",
 			"direction": "download"
 		},
 		{
@@ -302,7 +302,7 @@
 	"variables": {
 		"cpus": "1",
 		"disk_size": "65536",
-		"apt_mirror": "http://http.debian.net/debian",
+		"apt_mirror": "https://deb.debian.org/debian",
 		"apt_backports": "false",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"headless": "",
