@@ -6,5 +6,6 @@
 	"iso_url": "http://cdimage.debian.org/cdimage/archive/8.11.0/i386/iso-dvd/debian-8.11.0-i386-DVD-1.iso",
 	"virtualbox_guest_os_type": "Debian",
 	"vmware_guest_os_type": "debian8",
-	"version": "2.1.0"
+	"version": "2.1.0",
+	"version_description": "- Debian 8.11.0"
 }

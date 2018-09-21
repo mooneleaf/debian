@@ -191,7 +191,7 @@
 			{
 				"type": "vagrant",
 				"keep_input_artifact": false,
-				"output": "box/{{ user `vm_name` }}/{{ user `version` }}/{{.Provider}}.box",
+				"output": "{{ user `box_path` }}/{{ user `vm_name` }}/{{ user `version` }}/{{.Provider}}.box",
 				"vagrantfile_template": "{{ user `vagrantfile_template` }}"
 			},
 			{
@@ -265,12 +265,12 @@
 		},
 		{
 			"type": "shell-local",
-			"command": "mkdir -p 'versions/{{user `vm_name`}}'"
+			"command": "mkdir -p {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}; printf -- '%s\n' \"{{user `version_description`}}\" > {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/release.version"
 		},
 		{
 			"type": "file",
 			"source": "/tmp/guest-additions-version.txt",
-			"destination": "box/{{user `vm_name`}}/{{user `version`}}/{{build_name}}.version",
+			"destination": "{{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/{{build_name}}.version",
 			"direction": "download"
 		},
 		{
@@ -304,6 +304,7 @@
 		"disk_size": "65536",
 		"apt_mirror": "https://deb.debian.org/debian",
 		"apt_backports": "false",
+		"box_path": "",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"headless": "",
 		"http_proxy": "{{env `http_proxy`}}",
@@ -311,7 +312,7 @@
 		"install_vagrant_key": "true",
 		"iso_checksum": "",
 		"iso_checksum_type": "sha1",
-		"iso_path": "/Volumes/Filemate/ISO/debian",
+		"iso_path": "",
 		"iso_name": "",
 		"iso_url": "",
 		"memory": "512",

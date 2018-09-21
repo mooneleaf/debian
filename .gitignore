@@ -1,8 +1,7 @@
 packer_cache/
 output-*
-*.box
 *.tar.gz
-iso
+iso/
 crash.log
 tmp
 .vagrant/
@@ -11,3 +10,6 @@ Makefile.local
 box/
 .DS_Store
 .tmpatlas/
+Makefile
+*.mk
+configure.options
