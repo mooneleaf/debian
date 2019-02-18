@@ -2,10 +2,8 @@
 
 configure_debian_vagrant() {
 	#shellcheck disable=SC2039
-	local basefile="debian.json"
-
-	#shellcheck disable=SC2039
-	local isoDir=iso boxDir=box downloader="aria2c wget curl" downloaderArgs providers="parallels vmware virtualbox" versions="7 8 9" arches="amd64 i386"
+	local basefile="debian.json" isoDir=iso boxDir=box downloader="aria2c wget curl" downloaderArgs \
+		providers="parallels vmware virtualbox" versions="7 8 9" arches="amd64 i386" rsyncDestination=""
 
 	check_available() {
 		#shellcheck disable=SC2039
@@ -37,8 +35,10 @@ configure_debian_vagrant() {
 		#shellcheck disable=SC2039
 		local tool
 		for tool in "$@"; do
-			if check_available "${tool}"; then
-				return
+			if ! check_available "${tool}"; then
+				printf "%s\n" "Trying next option" >&2
+			else
+				return 0
 			fi
 		done
 	}
@@ -85,7 +85,7 @@ configure_debian_vagrant() {
 			;;
 
 			curl)
-				printf -- '%s' "curl --fail --location --progress=bar --output \"\$@\" \"${url}\""
+				printf -- '%s' "curl --fail --location --progress-bar --output \"\$@\" \"${url}\""
 			;;
 
 			wget)
@@ -239,6 +239,9 @@ configure_debian_vagrant() {
 		providers='${providers}'
 		versions='${versions}'
 		arches='${arches}'
+		basefile='${basefile}'
+		isoDir='${isoDir}'
+		boxDir='${boxDir}'
 
 	EOT
 

@@ -31,26 +31,25 @@ MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
 .SECONDEXPANSION:
 .DELETE_ON_ERROR:
+.SECONDARY:
 
-all: $(BOX_NAMES)
-
-isos: $(ISO_NAMES)
+boxes: $(BOX_NAMES)
 
 descriptions: $(DESCRIPTION_NAMES)
+
+isos: $(ISO_NAMES)
 
 Makefile: Makefile.in configure.options configure
 	./configure
 
 %.md:
 	mkdir -p "$(@D)"
-	printf -- "- Debian version %s\n" "$$(printf -- "$(@D)" | cut -c 11)" > "$@"
-	cat $^ >> $@
+	cat $^ > $@
 
 %.box:
 	packer build -only=$$(basename "$@" .box) -var-file=$< -var "iso_path=$(ISO_DIR)" -var "box_path=$(BOX_DIR)" $(BASE_FILE)
 
-%.version: %.box
-	# Deliberately Empty Rule
+%.version: %.box ;
 
 -include releases.mk boxes.mk isos.mk descriptions.mk
 
