@@ -33,11 +33,8 @@
 			"ssh_username": "{{ user `ssh_username` }}",
 			"ssh_wait_timeout": "10000s",
 			"vm_name": "{{ user `vm_name` }}",
-			"vmx_data": {
-
-				"memsize": "{{ user `memory` }}",
-				"numvcpus": "{{ user `cpus` }}"
-			}
+			"cpus": "{{ user `cpus` }}",
+			"memory": "{{ user `memory` }}"
 		},
 		{
 			"type": "virtualbox-iso",
@@ -72,20 +69,8 @@
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
 			"ssh_wait_timeout": "10000s",
-			"vboxmanage": [
-				[
-					"modifyvm",
-					"{{.Name}}",
-					"--memory",
-					"{{ user `memory` }}"
-				],
-				[
-					"modifyvm",
-					"{{.Name}}",
-					"--cpus",
-					"{{ user `cpus` }}"
-				]
-			],
+			"cpus": "{{ user `cpus` }}",
+			"memory": "{{ user `memory` }}",
 			"virtualbox_version_file": ".vbox_version",
 			"vm_name": "{{ user `vm_name` }}"
 		},
@@ -116,20 +101,8 @@
 			],
 			"output_directory": "output-{{ user `vm_name` }}-parallels-iso",
 			"parallels_tools_flavor": "lin",
-			"prlctl": [
-				[
-					"set",
-					"{{.Name}}",
-					"--memsize",
-					"{{ user `memory` }}"
-				],
-				[
-					"set",
-					"{{.Name}}",
-					"--cpus",
-					"{{ user `cpus` }}"
-				]
-			],
+			"cpus": "{{ user `cpus` }}",
+			"memory": "{{ user `memory` }}",
 			"prlctl_version_file": ".prlctl_version",
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
@@ -157,13 +130,6 @@
 		]
 	],
 	"provisioners": [
-		{
-			"type": "file",
-			"source": "{{ user `prl_tools_iso` }}",
-			"destination": "/home/{{user `ssh_username` }}/prl-tools-manual.iso",
-			"direction": "upload",
-			"only": ["parallels"]
-		},
 		{
 			"environment_vars": [
 				"APT_BACKPORTS={{user `apt_backports`}}",
@@ -279,7 +245,6 @@
 		"no_proxy": "{{env `no_proxy`}}",
 		"no_release": "true",
 		"parallels_guest_os_type": "debian",
-		"prl_tools_iso": "./prl-tools-lin-3.iso",
 		"preseed": "preseed.cfg",
 		"rsync_proxy": "{{env `rsync_proxy`}}",
 		"ssh_password": "vagrant",
