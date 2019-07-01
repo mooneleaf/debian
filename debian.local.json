@@ -182,7 +182,10 @@
 		},
 		{
 			"type": "shell-local",
-			"command": "mkdir -p {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}; printf -- '%s\n' \"{{user `version_description`}}\" > {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/release.version"
+			"inline": [
+				"mkdir -p {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}",
+				"printf -- '%s\n' '{{user `version_description`}}' > {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/release.version"
+			]
 		},
 		{
 			"type": "file",

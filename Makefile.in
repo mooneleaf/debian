@@ -1,5 +1,4 @@
 #!/usr/bin/make -f
-# Todo: convert to a template with a configure script
 # Makefile then depends on the json files + the configure script
 # Configure script:
 # - detects which DL tool to use

@@ -11,9 +11,7 @@ Vagrant.configure('2') do |config|
 			vm.whitelist_verified = true
 			vm.vmx[:numvcpus] = ::CPUS
 			vm.vmx[:memsize] = ::MEMORY
-			unless ::NAME.nil?
-				vm.vmx[:displayname] = ::NAME
-			end
+			vm.vmx[:displayname] = ::NAME unless ::NAME.nil?
 		end
 	end
 
