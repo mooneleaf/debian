@@ -7,5 +7,7 @@
 	"virtualbox_guest_os_type": "Debian_64",
 	"vmware_guest_os_type": "debian8-64",
 	"version": "2.1.0",
-	"version_description": "- Debian 8.11.1"
+	"version_description": "- Debian 8.11.1",
+	"apt_mirror": "http://archive.debian.org/debian",
+	"apt_updates": "false"
 }

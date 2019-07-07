@@ -1,19 +1,59 @@
 #!/bin/sh -eu
 
 configure_debian_vagrant() {
+	cd "${0%/*}"
+
 	#shellcheck disable=SC2039
-	local basefile="debian.json" isoDir=iso boxDir=box downloader="aria2c wget curl" downloaderArgs \
-		providers="parallels vmware virtualbox" versions="7 8 9" arches="amd64 i386" rsyncDestination=""
+	local basefile='debian.json' \
+		isoDir=iso \
+		boxDir=box \
+		downloader='aria2c wget curl' \
+		downloaderArgs \
+		providers \
+		providerSet=false \
+		versions \
+		versionSet=false \
+		arches \
+		archSet=false \
+		rsyncDestination=''
+
+	get_all_providers() {
+		jq --raw-output '.builders[].name' "${basefile}"
+	}
+
+	get_default_providers() {
+		get_all_providers
+	}
+
+	get_all_versions() {
+		find . -name 'debian[0-9]*' -maxdepth 1 | cut -c 9- | cut -f 1 -d '-' | sort -un | tr '\n' ' '
+	}
+
+	get_all_versions_pattern() {
+		get_all_versions | tr ' ' '|'
+	}
+
+	get_default_versions() {
+		get_all_versions | tr ' ' '\n' | tail -n 2 | tr '\n' ' '
+	}
+
+	get_all_arches() {
+		find . -name 'debian[0-9]*' -maxdepth 1 | cut -f 2 -d '-' | cut -f 1 -d . | sort -u | tr '\n' ' '
+	}
+
+	get_default_arches() {
+		get_all_arches
+	}
 
 	check_available() {
 		#shellcheck disable=SC2039
 		local tool="$1"
-		printf "Checking for %s..." "${tool}" >&2
+		printf -- 'Checking for %s...' "${tool}" >&2
 		if which "${tool}" >&2; then
-			printf "%s" "${tool}"
+			printf -- '%s' "${tool}"
 			return 0
 		else
-			printf "not found\n" >&2
+			printf -- 'not found\n' >&2
 			return 1
 		fi
 	}
@@ -21,12 +61,12 @@ configure_debian_vagrant() {
 	check_executable_path() {
 		#shellcheck disable=SC2039
 		local tool="$1"
-		printf "Checking for %s..." "${tool##*/}" >&2
+		printf -- 'Checking for %s...' "${tool##*/}" >&2
 		if [ -x "${tool}" ]; then
-			printf "${tool}\n" >&2
+			printf -- '%s\n' "${tool}" >&2
 			return 0
 		else
-			printf "not found\n" >&2
+			printf -- 'not found\n' >&2
 			return 1
 		fi
 	}
@@ -36,7 +76,7 @@ configure_debian_vagrant() {
 		local tool
 		for tool in "$@"; do
 			if ! check_available "${tool}"; then
-				printf "%s\n" "Trying next option" >&2
+				printf -- '%s\n' 'Trying next option' >&2
 			else
 				return 0
 			fi
@@ -47,8 +87,8 @@ configure_debian_vagrant() {
 		#shellcheck disable=SC2039
 		local provider tool toolPath
 		for provider in "$@"; do
-			tool=""
-			toolPath=""
+			tool=''
+			toolPath=''
 
 			case "${provider}" in
 				parallels)
@@ -60,13 +100,41 @@ configure_debian_vagrant() {
 				;;
 
 				vmware)
-					toolPath="/Applications/VMware Fusion.app/Contents/Library/vmware-vmx"
+					toolPath='/Applications/VMware Fusion.app/Contents/Library/vmware-vmx'
 				;;
 			esac
 
 			if ([ -n "${tool}" ] && check_available "${tool}" > /dev/null) || ([ -n "${toolPath}" ] && check_executable_path "${toolPath}" > /dev/null); then
-				printf "%s " "${provider}"
+				printf -- '%s ' "${provider}"
 			fi
+		done
+	}
+
+	check_versions() {
+		local version baseFile supported allVersions="$(get_all_versions)"
+		for version in "$@"; do
+			printf -- 'Checking if "%d" is a valid version\n' "${version}" >&2
+
+			for supported in ${allVersions}; do
+				if [ "${version}" -eq "${supported}" ]; then
+					printf -- '%s ' "${version}"
+					break 1
+				fi
+			done
+		done
+	}
+
+	check_arches() {
+		local arch baseFile supported allArches="$(get_all_arches)"
+		for arch in "$@"; do
+			printf -- 'Checking if "%s" is a valid arch\n' "${arch}" >&2
+
+			for supported in ${allArches}; do
+				if [ "${arch}" = "${supported}" ]; then
+					printf -- '%s ' "${arch}"
+					break 1
+				fi
+			done
 		done
 	}
 
@@ -81,15 +149,15 @@ configure_debian_vagrant() {
 
 		case "${downloader}" in
 			aria2c)
-				printf -- '%s' "aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir \"\$\$(dirname \$@)\" --out \"\$\$(basename \$@)\" --checksum \"${sumType}=${sumValue}\" \"${url}\""
-			;;
+				printf -- 'aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$$(dirname "$@")" --out "$$(basename "$@")" --checksum "%s=%s" "%s"' "${sumType}" "${sumValue}" "${url}"
+		   ;;
 
 			curl)
-				printf -- '%s' "curl --fail --location --progress-bar --output \"\$@\" \"${url}\""
+				printf -- 'curl --fail --location --progress-bar --output "$@" "%s"' ${url}
 			;;
 
 			wget)
-				printf -- '%s' "wget --no-verbose --progress=bar --show-progress --output-document \"\$@\" \"${url}\""
+				printf -- 'wget --no-verbose --progress=bar --show-progress --output-document "$@" "%s"' "${url}"
 			;;
 		esac
 	}
@@ -115,7 +183,7 @@ configure_debian_vagrant() {
 	get_release_names() {
 		#shellcheck disable=SC2039
 		local release provider name version isoName
-		printf '' > releases.mk
+		printf -- '' > releases.mk
 		for release in $(get_release_combinations); do
 			version="$(get_json_value .version "${release}.json")"
 			isoName=$(get_json_value .iso_name "${release}.json")
@@ -127,7 +195,7 @@ configure_debian_vagrant() {
 	get_box_names() {
 		#shellcheck disable=SC2039
 		local release version provider
-		printf '' > boxes.mk
+		printf -- '' > boxes.mk
 		for release in $(get_release_combinations); do
 			version="$(get_json_value .version "${release}.json")"
 			for provider in ${providers}; do
@@ -141,7 +209,7 @@ configure_debian_vagrant() {
 	get_description_names() {
 		#shellcheck disable=SC2039
 		local release version provider
-		printf '' > descriptions.mk
+		printf -- '' > descriptions.mk
 		for release in $(get_release_combinations); do
 			version="$(get_json_value .version "${release}.json")"
 			printf -- '%s/%s/%s/version-description.md ' "${boxDir}" "${release}" "${version}"
@@ -157,7 +225,7 @@ configure_debian_vagrant() {
 	get_iso_names() {
 		#shellcheck disable=SC2039
 		local release name
-		printf '' > isos.mk
+		printf -- '' > isos.mk
 		for release in $(get_release_combinations); do
 			name=$(get_json_value .iso_name "${release}.json")
 			printf -- '%s/%s ' "${isoDir}" "${name}"
@@ -181,13 +249,40 @@ configure_debian_vagrant() {
 				shift 2
 			;;
 
+			--provider)
+				if [ ${providerSet} = false ]; then
+					providers=''
+					providerSet=true
+				fi
+				providers="${providers:-}${2} "
+				shift 2
+			;;
+
 			--providers)
 				providers="$2"
 				shift 2
 			;;
 
+			--version)
+				if [ ${versionSet} = false ]; then
+					versions=''
+					versionSet=true
+				fi
+				versions="${versions:-}${2} "
+				shift 2
+			;;
+
 			--versions)
 				versions="$2"
+				shift 2
+			;;
+
+			--arch)
+				if [ ${archSet} = false ]; then
+					arches=''
+					archSet=true
+				fi
+				arches="${arches:-}${2} "
 				shift 2
 			;;
 
@@ -219,20 +314,32 @@ configure_debian_vagrant() {
 
 	downloader="$(first_available ${downloader})"
 	if [ -z "${downloader}" ]; then
-		echo "No downloader available" >&2
+		printf -- '%s\n' 'No downloader available' >&2
 		return 1
 	fi
 
-	providers="$(check_providers ${providers})"
+	providers="$(check_providers ${providers:-$(get_default_providers)})"
 	if [ -z "${providers}" ]; then
-		echo "No providers available" >&2
+		printf -- '%s\n' 'No providers available' >&2
 		return 1
 	fi
 
-	printf "Using downloader: %s\n" "${downloader}"
-	printf "Using providers: %s\n" "${providers}"
-	printf "Building versions: %s\n" "${versions}"
-	printf "Building arches: %s\n" "${arches}"
+	versions="$(check_versions ${versions:-$(get_default_versions)})"
+	if [ -z "${versions}" ]; then
+		printf -- '%s\n' 'No versions available' >&2
+		return 1
+	fi
+
+	arches="$(check_arches ${arches:-$(get_default_arches)})"
+	if [ -z "${arches}" ]; then
+		printf -- '%s\n' 'No arches available' >&2
+		return 1
+	fi
+
+	printf -- 'Using downloader: %s\n' "${downloader}"
+	printf -- 'Using providers: %s\n' "${providers}"
+	printf -- 'Building versions: %s\n' "${versions}"
+	printf -- 'Building arches: %s\n' "${arches}"
 
 	cat <<-EOT > ./configure.options
 		downloader='${downloader}'

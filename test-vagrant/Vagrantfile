@@ -1,0 +1,42 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+NAME = 'debian-test-vagrant'
+
+Vagrant.configure(2) do |config|
+
+	config.vm.box_version = "0"
+
+	config.vm.define "debian7-amd64" do |machine|
+		machine.vm.box = "koalephant/debian7-amd64"
+	end
+
+	config.vm.define "debian7-i386" do |machine|
+		machine.vm.box = "koalephant/debian7-i386"
+	end
+
+	config.vm.define "debian8-amd64" do |machine|
+		machine.vm.box = "koalephant/debian8-amd64"
+	end
+
+	config.vm.define "debian8-i386" do |machine|
+		machine.vm.box = "koalephant/debian8-i386"
+	end
+
+	config.vm.define "debian9-amd64" do |machine|
+		machine.vm.box = "koalephant/debian9-amd64"
+	end
+
+	config.vm.define "debian9-i386" do |machine|
+		machine.vm.box = "koalephant/debian9-i386"
+	end
+
+	config.vm.define "debian10-amd64" do |machine|
+		machine.vm.box = "koalephant/debian10-amd64"
+	end
+
+	config.vm.define "debian10-i386" do |machine|
+		machine.vm.box = "koalephant/debian10-i386"
+	end
+
+end

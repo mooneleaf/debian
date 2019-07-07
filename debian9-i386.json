@@ -3,7 +3,7 @@
 	"vm_name": "debian9-i386",
 	"iso_checksum": "f92401d123a6adb8a6a4871e5ea26557cc9cdaa2",
 	"iso_name": "debian-9.9.0-i386-DVD-1.iso",
-	"iso_url": "https://cdimage.debian.org/debian-cd/current/i386/iso-dvd/debian-9.9.0-i386-DVD-1.iso",
+	"iso_url": "http://cdimage.debian.org/cdimage/archive/9.9.0/i386/iso-dvd/debian-9.9.0-i386-DVD-1.iso",
 	"virtualbox_guest_os_type": "Debian",
 	"vmware_guest_os_type": "debian9",
 	"version": "2.1.0",
