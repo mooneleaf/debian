@@ -138,6 +138,15 @@
 	],
 	"provisioners": [
 		{
+			"type": "shell-local",
+			"inline": [
+				"if [ ! -d '{{user `configdir` }}' ]; then printf -- 'Invalid config dir passed: \"%s\"\n' '{{user `configdir` }}'; exit 2; fi",
+				"mkdir -p configdir",
+				"rm -f configdir/configdir.tar",
+				"tar -c -f configdir/configdir.tar -C {{user `configdir` }} '.'"
+			]
+		},
+		{
 			"type": "shell",
 			"environment_vars": [
 				"APT_BACKPORTS={{user `apt_backports`}}",
