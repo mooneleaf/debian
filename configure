@@ -16,6 +16,7 @@ configure_debian_vagrant() {
 		arches \
 		archSet=false \
 		rsyncDestination='' \
+		configDir='' \
 		errorMode='abort'
 
 	get_all_providers() {
@@ -254,6 +255,11 @@ configure_debian_vagrant() {
 				shift 2
 			;;
 
+			--config-dir)
+				configDir="$2"
+				shift 2
+			;;
+
 			--on-error)
 				errorMode="${2:-abort}"
 				shift 2
@@ -359,7 +365,7 @@ configure_debian_vagrant() {
 		basefile='${basefile}'
 		isoDir='${isoDir}'
 		boxDir='${boxDir}'
-
+		configDir='${configDir}'
 		errorMode='${errorMode}'
 	EOT
 
@@ -370,6 +376,7 @@ configure_debian_vagrant() {
 		-e "s#_BOX_DIR_#${boxDir}#" \
 		-e "s#_ISO_NAMES_#$(get_iso_names)#" \
 		-e "s#_ISO_DIR_#${isoDir}#" \
+		-e "s#_CONFIG_DIR_#${configDir}#" \
 		-e "s#_ERROR_MODE_#${errorMode}#" \
 		-e "s#_DESCRIPTION_NAMES_#$(get_description_names)#" \
 		-e "s#_PROVIDER_NAMES_#${providers}#" \
