@@ -185,11 +185,11 @@
 			],
 			"execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E {{ .Path }}",
 			"scripts": [
+				"script/motd.sh",
 				"script/vagrant.sh",
 				"script/vmware.sh",
 				"script/virtualbox.sh",
-				"script/parallels.sh",
-				"script/motd.sh"
+				"script/parallels.sh"
 			],
 			"type": "shell",
 			"pause_before": "10s"

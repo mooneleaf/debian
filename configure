@@ -15,7 +15,8 @@ configure_debian_vagrant() {
 		versionSet=false \
 		arches \
 		archSet=false \
-		rsyncDestination=''
+		rsyncDestination='' \
+		errorMode='abort'
 
 	get_all_providers() {
 		jq --raw-output '.builders[].name' "${basefile}"
@@ -249,6 +250,11 @@ configure_debian_vagrant() {
 				shift 2
 			;;
 
+			--on-error)
+				errorMode="${2:-abort}"
+				shift 2
+			;;
+
 			--provider)
 				if [ ${providerSet} = false ]; then
 					providers=''
@@ -350,6 +356,7 @@ configure_debian_vagrant() {
 		isoDir='${isoDir}'
 		boxDir='${boxDir}'
 
+		errorMode='${errorMode}'
 	EOT
 
 	sed \
@@ -359,6 +366,7 @@ configure_debian_vagrant() {
 		-e "s#_BOX_DIR_#${boxDir}#" \
 		-e "s#_ISO_NAMES_#$(get_iso_names)#" \
 		-e "s#_ISO_DIR_#${isoDir}#" \
+		-e "s#_ERROR_MODE_#${errorMode}#" \
 		-e "s#_DESCRIPTION_NAMES_#$(get_description_names)#" \
 		-e "s#_PROVIDER_NAMES_#${providers}#" \
 		Makefile.in > Makefile

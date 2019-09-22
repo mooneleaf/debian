@@ -20,6 +20,8 @@ ISO_DIR = _ISO_DIR_
 
 ISO_NAMES = _ISO_NAMES_
 
+ERROR_MODE = _ERROR_MODE_
+
 RELEASE_NAMES = _RELEASE_NAMES_
 
 PROVIDER_NAMES = _PROVIDER_NAMES_
@@ -46,7 +48,7 @@ Makefile: Makefile.in configure.options configure
 	cat $^ > $@
 
 %.box:
-	packer build -only=$$(basename "$@" .box) -var-file=$< -var "iso_path=$(ISO_DIR)" -var "box_path=$(BOX_DIR)" $(BASE_FILE)
+	packer build -on-error=$(ERROR_MODE) -only=$$(basename "$@" .box) -var-file=$< -var "iso_path=$(ISO_DIR)" -var "box_path=$(BOX_DIR)" $(BASE_FILE)
 
 %.version: %.box ;
 
