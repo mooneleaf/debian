@@ -164,13 +164,13 @@
 			"type": "shell-local",
 			"inline": [
 				"mkdir -p tools-manual"
-			]
+			],
+			"pause_before": "20s"
 		},
 		{
 			"type": "file",
 			"source": "tools-manual",
-			"destination": "/home/vagrant",
-			"pause_before": "10s"
+			"destination": "/home/vagrant"
 		},
 		{
 			"type": "shell",
@@ -200,13 +200,6 @@
 			]
 		},
 		{
-			"type": "shell-local",
-			"inline": [
-				"mkdir -p {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}",
-				"printf -- '%s\n' '{{user `version_description`}}' > {{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/release.version"
-			]
-		},
-		{
 			"type": "file",
 			"source": "/tmp/guest-additions-version.txt",
 			"destination": "{{ user `box_path` }}/{{user `vm_name`}}/{{user `version`}}/{{build_name}}.version",
@@ -230,7 +223,7 @@
 		"box_path": "",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"guest_tools": "true",
-		"guest_tools_distro": "true",
+		"guest_tools_distro": "false",
 		"headless": "true",
 		"http_proxy": "{{env `http_proxy`}}",
 		"https_proxy": "{{env `https_proxy`}}",

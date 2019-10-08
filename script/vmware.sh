@@ -1,5 +1,7 @@
 #!/bin/sh -eu
 
+SSH_USER="${SSH_USERNAME:-vagrant}"
+
 if [ "${PACKER_BUILDER_TYPE}" = 'vmware-iso' ]; then
 	case "$(printf -- '%s' "${GUEST_TOOLS:-}" | tr '[:upper:]' '[:lower:]')" in
 		true|yes|on|1)

@@ -24,9 +24,13 @@ ERROR_MODE = _ERROR_MODE_
 
 RELEASE_NAMES = _RELEASE_NAMES_
 
+RELEASE_FILES = $(addsuffix .json,$(RELEASE_NAMES))
+
 PROVIDER_NAMES = _PROVIDER_NAMES_
 
 DESCRIPTION_NAMES = _DESCRIPTION_NAMES_
+
+VERSION_NAMES = $(addsuffix .version,$(PROVIDER_NAMES))
 
 MAKEFLAGS += --no-builtin-rules
 .SUFFIXES:
@@ -34,13 +38,15 @@ MAKEFLAGS += --no-builtin-rules
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-boxes: $(BOX_NAMES)
+all: descriptions ## Build everything (default)
 
-descriptions: $(DESCRIPTION_NAMES)
+boxes: $(BOX_NAMES) ## Build just the .box files
 
-isos: $(ISO_NAMES)
+descriptions: $(DESCRIPTION_NAMES) ## Build the markdown description for each name/version
 
-Makefile: Makefile.in configure.options configure
+isos: $(ISO_NAMES) ## Download the ISOs
+
+Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 	./configure
 
 %.md:
@@ -54,10 +60,18 @@ Makefile: Makefile.in configure.options configure
 
 -include releases.mk boxes.mk isos.mk descriptions.mk
 
-clean:
+clean: ## Remove the generated build files
 	rm -fv configure.options Makefile
 
-print-%:
+help: ## Show this help
+	@sed -n -E -e '/^[ a-zA-Z_-]+:.*## .*$$/p' $(MAKEFILE_LIST) | \
+		sed -E -e 's/([^: ]+) ([^: ]+):/\1|\2:/' -e 's/^([^:]+):.+## *(.+)$$/"\1" "\2"/' | \
+		xargs -n 2 printf -- '\033[36m%-25s\033[0m %s\n'
+
+
+#@grep -h -E '^[ a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) |
+#@ | awk 'BEGIN {FS = ":.*?## "}; {printf -- "\033[36m%-25s\033[0m %s\n", $$1, $$2}'
+print-%: Makefile
 	@echo '$*=$($*)'
 
-.PHONY: all isos
+.PHONY: all isos descriptions boxes

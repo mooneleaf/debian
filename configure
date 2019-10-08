@@ -216,10 +216,14 @@ configure_debian_vagrant() {
 			printf -- '%s/%s/%s/version-description.md ' "${boxDir}" "${release}" "${version}"
 			printf -- '%s/%s/%s/version-description.md: ' "${boxDir}" "${release}" "${version}" >> descriptions.mk
 			printf -- '%s/%s/%s/release.version ' "${boxDir}" "${release}" "${version}" >> descriptions.mk
+
 			for provider in ${providers}; do
 				printf -- '%s/%s/%s/%s.version ' "${boxDir}" "${release}" "${version}" "${provider}" >> descriptions.mk
 			done
 			printf -- '\n\n' >> descriptions.mk
+
+			printf -- '%s/%s/%s/release.version: %s.json\n' "${boxDir}" "${release}" "${version}" "${release}" >> descriptions.mk
+			printf -- '\tmkdir -p "$(@D)"\n\tprintf -- "%%s\\n" "%s" > "$@"\n\n' "$(get_json_value .version_description "${release}.json")"  >> descriptions.mk
 		done
 	}
 
