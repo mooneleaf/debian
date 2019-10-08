@@ -2,7 +2,6 @@
 
 SSH_USER="${SSH_USERNAME:-vagrant}"
 
-
 if [ "${PACKER_BUILDER_TYPE}" = 'parallels-iso' ]; then
 	case "$(printf "%s" "${GUEST_TOOLS:-}" | tr '[:upper:]' '[:lower:]')" in
 		true|yes|on|1)
@@ -16,15 +15,17 @@ if [ "${PACKER_BUILDER_TYPE}" = 'parallels-iso' ]; then
 		;;
 	esac
 
-	if [ -s /home/${SSH_USER}/prl-tools-manual.iso ]; then
-		mount -o loop /home/${SSH_USER}/prl-tools-manual.iso /mnt
+	mkdir -p /mnt/tools
+	if [ -f "/home/${SSH_USER}/tools-manual/prl-tools-lin.iso" ]; then
+		mount -o loop "/home/${SSH_USER}/tools-manual/prl-tools-lin.iso" /mnt/tools
 	else
-		mount -o loop /home/${SSH_USER}/prl-tools-lin.iso /mnt
+		mount -o loop "/home/${SSH_USER}/prl-tools-lin.iso" /mnt/tools
 	fi
 
 	/mnt/install --install-unattended-with-deps
-	umount /mnt
+	umount /mnt/tools
+	rmdir /mnt/tools
 	printf -- '- Parallels Tools version %s\n' "$(prltoolsd  -V | cut -f 3 -d ' ')" > /tmp/guest-additions-version.txt
-	rm -fv /home/${SSH_USER}/prl-tools-lin.iso /home/${SSH_USER}/prl-tools-manual.iso /home/${SSH_USER}/.prlctl_version
+	rm -frv "/home/${SSH_USER}/prl-tools-lin.iso" "/home/${SSH_USER}/tools-manual" "/home/${SSH_USER}/.prlctl_version"
 fi
 

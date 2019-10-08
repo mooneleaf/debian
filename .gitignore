@@ -13,3 +13,4 @@ box/
 Makefile
 *.mk
 configure.options
+tools-manual/
