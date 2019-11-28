@@ -135,8 +135,19 @@
 				"if [ ! -d '{{user `configdir` }}' ]; then printf -- 'Invalid config dir passed: \"%s\"\n' '{{user `configdir` }}'; exit 2; fi",
 				"mkdir -p configdir",
 				"rm -f configdir/configdir.tar",
-				"tar -c -f configdir/configdir.tar -C {{user `configdir` }} '.'"
+				"tar -c -f configdir/configdir.tar --exclude data -C {{user `configdir` }} '.'"
 			]
+		},
+		{
+			"type": "shell-local",
+			"inline": [
+				"mkdir -p tools-manual"
+			]
+		},
+		{
+			"type": "file",
+			"source": "tools-manual",
+			"destination": "/home/vagrant"
 		},
 		{
 			"type": "shell",
@@ -160,18 +171,6 @@
 			],
 			"expect_disconnect": true,
 			"skip_clean": true
-		},
-		{
-			"type": "shell-local",
-			"inline": [
-				"mkdir -p tools-manual"
-			],
-			"pause_before": "20s"
-		},
-		{
-			"type": "file",
-			"source": "tools-manual",
-			"destination": "/home/vagrant"
 		},
 		{
 			"type": "shell",
@@ -198,7 +197,8 @@
 				"script/vmware.sh",
 				"script/virtualbox.sh",
 				"script/parallels.sh"
-			]
+			],
+			"pause_before": "10s"
 		},
 		{
 			"type": "file",
@@ -211,33 +211,25 @@
 			"execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E {{ .Path }}",
 			"scripts": [
 				"script/minimize.sh"
-			],
-			"type": "shell"
-		},
-		{
-			"type": "shell-local",
-			"inline": [
-				"mkdir -p configdir",
-				"rm -f configdir/configdir.tar",
-				"tar -c -f configdir/configdir.tar -C {{user `configdir` }} '.'"
 			]
 		},
 		{
 			"type": "file",
 			"source": "configdir",
 			"destination": "/tmp/",
-			"pause_before": "10s"
+			"pause_before": "20s"
 		},
 		{
 			"type": "shell",
 			"inline": [
-				"sudo -S -H mkdir -p /tmp/bundle-infra",
+				"sudo -H mkdir -p /tmp/bundle-infra",
 				"cd /tmp/bundle-infra",
-				"sudo -S -H tar -x -f /tmp/configdir/configdir.tar -C .",
-				"/tmp/bundle-infra/setup-scripts/setup.sh --role development --env local"
+				"sudo -H tar -x -f /tmp/configdir/configdir.tar -C .",
+				"/tmp/bundle-infra/setup.sh --role development --env local --hostname local-dev.bundlesites.com"
 			]
 		},
 		{
+			"type": "shell",
 			"environment_vars": [
 				"APT_BACKPORTS={{user `apt_backports`}}",
 				"APT_UPDATES={{user `apt_updates`}}",
@@ -273,7 +265,7 @@
 		"configdir": "./configdir",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"guest_tools": "true",
-		"guest_tools_distro": "false",
+		"guest_tools_distro": "true",
 		"headless": "true",
 		"http_proxy": "{{env `http_proxy`}}",
 		"https_proxy": "{{env `https_proxy`}}",
