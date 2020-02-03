@@ -14,6 +14,8 @@ BASE_FILE = _BASE_FILE_
 
 BOX_NAMES = _BOX_NAMES_
 
+BOX_SUMS = $(patsubst %.box,%.sha1sum,$(BOX_NAMES))
+
 BOX_DIR = _BOX_DIR_
 
 ISO_DIR = _ISO_DIR_
@@ -40,13 +42,15 @@ MAKEFLAGS += --no-builtin-rules
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-all: descriptions ## Build everything (default)
+all: descriptions checksums ## Build everything (default)
 
 boxes: $(BOX_NAMES) ## Build just the .box files
 
 descriptions: $(DESCRIPTION_NAMES) ## Build the markdown description for each name/version
 
 isos: $(ISO_NAMES) ## Download the ISOs
+
+checksums: $(BOX_SUMS) ## Calculate the box checksums
 
 Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 	./configure
@@ -57,6 +61,9 @@ Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 
 %.box:
 	packer build -on-error=$(ERROR_MODE) -only=$$(basename "$@" .box) -var-file=$< -var "iso_path=$(ISO_DIR)" -var "box_path=$(BOX_DIR)" -var "configdir=$(CONFIG_DIR)" $(BASE_FILE)
+
+%.sha1sum: %.box
+	shasum -a 1 -b $< > $@
 
 %.version: %.box ;
 

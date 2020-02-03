@@ -224,7 +224,10 @@ configure_debian_vagrant() {
 			printf -- '\n\n' >> descriptions.mk
 
 			printf -- '%s/%s/%s/release.version: %s.json\n' "${boxDir}" "${release}" "${version}" "${release}" >> descriptions.mk
-			printf -- '\tmkdir -p "$(@D)"\n\tprintf -- "%%s\\n" "%s" > "$@"\n\n' "$(get_json_value .version_description "${release}.json")"  >> descriptions.mk
+			printf -- '\tmkdir -p "$(@D)"\n' >> descriptions.mk
+			printf -- '\tprintf -- "%%s\\n" "%s" "- BundleSites Infra %s" > "$@"\n' "$(get_json_value .version_description "${release}.json")" "$(cat "${configDir}/configs/_all/etc/bundlesites.version")"  >> descriptions.mk
+			printf -- '\n'  >> descriptions.mk
+
 		done
 	}
 
