@@ -22,7 +22,7 @@ install_from_iso() {
 
 if [ "${PACKER_BUILDER_TYPE}" = 'virtualbox-iso' ]; then
 	case "$(printf -- '%s' "${GUEST_TOOLS:-}" | tr '[:upper:]' '[:lower:]')" in
-		true|yes|on|1)
+		(true|yes|on|1)
 			printf -- '==> Installing Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 		;;
 
@@ -34,7 +34,7 @@ if [ "${PACKER_BUILDER_TYPE}" = 'virtualbox-iso' ]; then
 	esac
 
 	case "$(printf -- '%s' "${GUEST_TOOLS_DISTRO:-}" | tr '[:upper:]' '[:lower:]')" in
-		(*virtualbox*)
+		(true|yes|on|1|*virtualbox*)
 			printf -- '==> Installing Distro Provided Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 			printf -- 'Package: virtualbox-guest-utils virtualbox-guest-dkms virtualbox-guest-additions-iso\nPin: release a=%s\nPin-Priority: 500\n\n' "$(lsb_release -sc)-updates" "$(lsb_release -sc)-backports" > /etc/apt/preferences.d/virtualbox-additions
 

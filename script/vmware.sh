@@ -4,7 +4,7 @@ SSH_USER="${SSH_USERNAME:-vagrant}"
 
 if [ "${PACKER_BUILDER_TYPE}" = 'vmware-iso' ]; then
 	case "$(printf -- '%s' "${GUEST_TOOLS:-}" | tr '[:upper:]' '[:lower:]')" in
-		true|yes|on|1)
+		(true|yes|on|1)
 			printf -- '==> Installing Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 		;;
 
@@ -17,7 +17,7 @@ if [ "${PACKER_BUILDER_TYPE}" = 'vmware-iso' ]; then
 
 
 	case "$(printf -- '%s' "${GUEST_TOOLS_DISTRO:-}" | tr '[:upper:]' '[:lower:]')" in
-		(*vmware*)
+		(true|yes|on|1|*vmware*)
 			printf -- '==> Installing Distro Provided Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 			printf -- 'Package: open-vm-tools open-vm-tools-dkms open-vm-tools-dev open-vm-tools-desktop\nPin: release a=%s\nPin-Priority: 500\n\n' "$(lsb_release -sc)-updates" "$(lsb_release -sc)-backports" > /etc/apt/preferences.d/open-vm-tools
 			apt-get -y install open-vm-tools
