@@ -7,7 +7,7 @@ configure_debian_vagrant() {
 	local basefile='debian.json' \
 		isoDir=iso \
 		boxDir=box \
-		downloader='aria2c wget curl' \
+		downloader \
 		downloaderArgs \
 		providers \
 		providerSet=false \
@@ -18,12 +18,18 @@ configure_debian_vagrant() {
 		rsyncDestination='' \
 		errorMode='abort'
 
+
+
 	get_all_providers() {
 		jq --raw-output '.builders[].name' "${basefile}"
 	}
 
 	get_default_providers() {
 		get_all_providers
+	}
+
+	get_default_downloaders() {
+		printf -- '%s ' aria2c wget curl
 	}
 
 	get_all_versions() {
@@ -322,7 +328,7 @@ configure_debian_vagrant() {
 		esac
 	done
 
-	downloader="$(first_available ${downloader})"
+	downloader="$(first_available ${downloader:-$(get_default_downloaders)})"
 	if [ -z "${downloader}" ]; then
 		printf -- '%s\n' 'No downloader available' >&2
 		return 1
