@@ -18,6 +18,7 @@ if [ "${PACKER_BUILDER_TYPE}" = 'vmware-iso' ]; then
 
 	case "$(printf -- '%s' "${GUEST_TOOLS_DISTRO:-}" | tr '[:upper:]' '[:lower:]')" in
 		(*vmware*)
+			printf -- '==> Installing Distro Provided Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 			printf -- 'Package: open-vm-tools open-vm-tools-dkms open-vm-tools-dev open-vm-tools-desktop\nPin: release a=%s\nPin-Priority: 500\n\n' "$(lsb_release -sc)-updates" "$(lsb_release -sc)-backports" > /etc/apt/preferences.d/open-vm-tools
 			apt-get -y install open-vm-tools
 
@@ -33,6 +34,7 @@ if [ "${PACKER_BUILDER_TYPE}" = 'vmware-iso' ]; then
 	esac
 
 	if ! command -v vmware-toolbox-cmd > /dev/null; then
+		printf -- '==> Installing Hypervisor Provided Guest Tools for %s\n' "${PACKER_BUILDER_TYPE}"
 		mkdir -p /mnt/tools
 		if [ -f "/home/${SSH_USER}/tools-manual/vmware-tools-lin.iso" ]; then
 			mount -o loop,ro "/home/${SSH_USER}/tools-manual/vmware-tools-lin.iso" /mnt/tools
