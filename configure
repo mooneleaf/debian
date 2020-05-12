@@ -132,6 +132,7 @@ configure_debian_vagrant() {
 	}
 
 	check_arches() {
+		# shellcheck disable=SC2039
 		local arch baseFile supported allArches="$(get_all_arches)"
 		for arch in "$@"; do
 			printf -- 'Checking if "%s" is a valid arch\n' "${arch}" >&2
@@ -143,6 +144,23 @@ configure_debian_vagrant() {
 				fi
 			done
 		done
+	}
+
+	get_sum_verifier() {
+		# shellcheck disable=SC2039
+		local type="$1" hash="$2" file="$3"
+
+		case "$1" in
+			(md5)
+				# shellcheck disable=SC2016
+				printf -- '[ "$(md5 -q "$@")" = "%s" ]\\n' "${hash}"
+			;;
+
+			(sha*)
+				# shellcheck disable=SC2016
+				printf -- 'printf -- "%%s  %%s\\n" "%s" "$@" | shasum -a %s -c' "${hash}" "${type#sha-}"
+			;;
+		esac
 	}
 
 	get_downloader_command() {
@@ -157,15 +175,17 @@ configure_debian_vagrant() {
 		case "${downloader}" in
 			aria2c)
 				# shellcheck disable=SC2016
-				printf -- 'aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$$(dirname "$@")" --out "$$(basename "$@")" --checksum "%s=%s" "%s"' "${sumType}" "${sumValue}" "${url}"
+				printf -- 'aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$$(dirname "$@")" --out "$$(basename "$@")" --checksum "%s=%s" "%s"\n' "${sumType}" "${sumValue}" "${url}"
 		   ;;
 
 			curl)
-				printf -- 'curl --fail --location --output "$@" "%s"' "${url}"
+				printf -- 'curl --fail --location --output "$@" "%s"\n' "${url}"
+				get_sum_verifier "$sumType" "$sumValue" '$@'
 			;;
 
 			wget)
-				printf -- 'wget --no-verbose --progress=bar --show-progress --output-document "$@" "%s"' "${url}"
+				printf -- 'wget --no-verbose --progress=bar --show-progress --output-document "$@" "%s"\n' "${url}"
+				get_sum_verifier "$sumType" "$sumValue" '$@'
 			;;
 		esac
 	}
@@ -241,7 +261,7 @@ configure_debian_vagrant() {
 		for release in $(get_release_combinations); do
 			name=$(get_json_value .iso_name "${release}.json")
 			printf -- '%s/%s ' "${isoDir}" "${name}"
-			printf -- '%s/%s:\n\t%s\n\n' "${isoDir}" "${name}" "$(get_downloader_command "${release}")" >> isos.mk
+			printf -- '%s/%s:\n%s\n\n' "${isoDir}" "${name}" "$(get_downloader_command "${release}" | sed -E 's/^/	/')" >> isos.mk
 		done
 	}
 
