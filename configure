@@ -156,11 +156,12 @@ configure_debian_vagrant() {
 
 		case "${downloader}" in
 			aria2c)
+				# shellcheck disable=SC2016
 				printf -- 'aria2c --auto-file-renaming=false --summary-interval 0 --optimize-concurrent-downloads --file-allocation none --max-connection-per-server 5 --console-log-level warn --dir "$$(dirname "$@")" --out "$$(basename "$@")" --checksum "%s=%s" "%s"' "${sumType}" "${sumValue}" "${url}"
 		   ;;
 
 			curl)
-				printf -- 'curl --fail --location --progress-bar --output "$@" "%s"' ${url}
+				printf -- 'curl --fail --location --output "$@" "%s"' "${url}"
 			;;
 
 			wget)
