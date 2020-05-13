@@ -60,6 +60,9 @@ Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 
 -include releases.mk boxes.mk isos.mk descriptions.mk
 
+checksums: $(BOX_NAMES) ## Generate the checksums of the built boxes
+	cd $(BOX_DIR) && shasum $(subst $(BOX_DIR)/,,$^) > boxes.shasum
+
 clean: ## Remove the generated build files
 	rm -fv configure.options Makefile
 
