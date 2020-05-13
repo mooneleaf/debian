@@ -31,7 +31,7 @@
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"tools_upload_flavor": "linux",
 			"tools_upload_path": "vmware-tools-lin.iso",
 			"vm_name": "{{ user `vm_name` }}",
@@ -71,7 +71,7 @@
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"cpus": "{{ user `cpus` }}",
 			"memory": "{{ user `memory` }}",
 			"virtualbox_version_file": ".vbox_version",
@@ -108,13 +108,25 @@
 			"parallels_tools_flavor": "lin",
 			"parallels_tools_guest_path": "prl-tools-lin.iso",
 			"parallels_tools_mode": "upload",
+			"prlctl": [
+				["set", "{{.Name}}", "--shf-host-defined", "off"],
+				["set", "{{.Name}}", "--shared-profile", "off"],
+				["set", "{{.Name}}", "--sh-app-host-to-guest", "off"],
+				["set", "{{.Name}}", "--sh-app-guest-to-host", "off"],
+				["set", "{{.Name}}", "--shared-cloud", "off"],
+				["set", "{{.Name}}", "--smart-mount", "off"],
+				["set", "{{.Name}}", "--sync-host-printers", "off"],
+				["set", "{{.Name}}", "--auto-share-camera", "off"],
+				["set", "{{.Name}}", "--auto-share-bluetooth", "off"],
+				["set", "{{.Name}}", "--device-del", "sound0"]
+			],
 			"cpus": "{{ user `cpus` }}",
 			"memory": "{{ user `memory` }}",
 			"prlctl_version_file": ".prlctl_version",
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"vm_name": "{{ user `vm_name` }}"
 		}
 	],
@@ -153,7 +165,8 @@
 			"type": "shell-local",
 			"inline": [
 				"mkdir -p tools-manual"
-			]
+			],
+			"pause_before": "10s"
 		},
 		{
 			"type": "file",
@@ -185,6 +198,7 @@
 		},
 		{
 			"type": "shell",
+			"pause_before": "10s",
 			"environment_vars": [
 				"MOTD={{user `motd`}}",
 				"GUEST_TOOLS={{user `guest_tools`}}",
@@ -292,7 +306,7 @@
 		"maintenanceDir": "../BundleMaintenance/",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"guest_tools": "true",
-		"guest_tools_distro": "true",
+		"guest_tools_distro": "vmware",
 		"headless": "true",
 		"http_proxy": "{{env `http_proxy`}}",
 		"https_proxy": "{{env `https_proxy`}}",

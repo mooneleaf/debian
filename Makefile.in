@@ -18,6 +18,8 @@ BOX_SUMS = $(patsubst %.box,%.sha1sum,$(BOX_NAMES))
 
 BOX_DIR = _BOX_DIR_
 
+BOX_SUMS_ALL = $(BOX_DIR)/boxes.sha1sum
+
 ISO_DIR = _ISO_DIR_
 
 ISO_NAMES = _ISO_NAMES_
@@ -48,11 +50,11 @@ boxes: $(BOX_NAMES) ## Build just the .box files
 
 descriptions: $(DESCRIPTION_NAMES) ## Build the markdown description for each name/version
 
+checksums: $(BOX_SUMS)  ## Calculate the box checksums
+
 isos: $(ISO_NAMES) ## Download the ISOs
 
-checksums: $(BOX_SUMS) ## Calculate the box checksums
-
-Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
+Makefile *.mk: Makefile.in configure.options configure $(RELEASE_FILES)
 	./configure
 
 %.md:
@@ -63,11 +65,17 @@ Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 	packer build -on-error=$(ERROR_MODE) -only=$$(basename "$@" .box) -var-file=$< -var "iso_path=$(ISO_DIR)" -var "box_path=$(BOX_DIR)" -var "configdir=$(CONFIG_DIR)" $(BASE_FILE)
 
 %.sha1sum: %.box
-	shasum -a 1 -b $< > $@
+	cd "$(@D)" &&  shasum -a 1 -b "$$(basename $<)" > "$$(basename $@)"
+
+$(BOX_SUMS_ALL): $(BOX_SUMS)
+	printf -- '' > $@
+	for file in $^; do sed -E -e "s#[a-z]+\.box#$${file%.sha1sum}.box#g" < "$${file}" >> $@; done
 
 %.version: %.box ;
 
 -include releases.mk boxes.mk isos.mk descriptions.mk
+
+checksums-all: $(BOX_SUMS_ALL) ## Generate the checksums of the built boxes
 
 clean: ## Remove the generated build files
 	rm -fv configure.options Makefile

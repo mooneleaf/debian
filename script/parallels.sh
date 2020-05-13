@@ -17,9 +17,9 @@ if [ "${PACKER_BUILDER_TYPE}" = 'parallels-iso' ]; then
 
 	mkdir -p /mnt/tools
 	if [ -f "/home/${SSH_USER}/tools-manual/prl-tools-lin.iso" ]; then
-		mount -o loop "/home/${SSH_USER}/tools-manual/prl-tools-lin.iso" /mnt/tools
+		mount -o loop,ro "/home/${SSH_USER}/tools-manual/prl-tools-lin.iso" /mnt/tools
 	else
-		mount -o loop "/home/${SSH_USER}/prl-tools-lin.iso" /mnt/tools
+		mount -o loop,ro "/home/${SSH_USER}/prl-tools-lin.iso" /mnt/tools
 	fi
 
 	/mnt/tools/install --install-unattended-with-deps
