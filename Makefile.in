@@ -44,6 +44,8 @@ MAKEFLAGS += --no-builtin-rules
 .DELETE_ON_ERROR:
 .SECONDARY:
 
+ALL_BOXES = $(patsubst %.box,%.sha1sum, $(wildcard */*/*/*.box))
+
 all: descriptions checksums-all ## Build everything (default)
 
 boxes: $(BOX_NAMES) ## Build just the .box files
@@ -72,9 +74,9 @@ Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 %.sha1sum: %.box
 	cd "$(@D)" &&  shasum -a 1 -b "$$(basename $<)" > "$$(basename $@)"
 
-$(BOX_SUMS_ALL): $(BOX_SUMS)
+$(BOX_SUMS_ALL): $$(ALL_BOXES)
 	printf -- '' > $@
-	for file in $^; do sed -E -e "s#[a-z]+\.box#$${file%.sha1sum}.box#g" < "$${file}" >> $@; done
+	for file in $(subst $(BOX_DIR)/,,$^); do sed -E -e "s#[a-z]+\.box#$${file%.sha1sum}.box#g" < "$(BOX_DIR)/$${file}" >> $@; done
 
 %.version: %.box ;
 
