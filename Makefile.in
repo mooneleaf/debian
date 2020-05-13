@@ -42,17 +42,22 @@ MAKEFLAGS += --no-builtin-rules
 .DELETE_ON_ERROR:
 .SECONDARY:
 
-all: descriptions checksums ## Build everything (default)
+all: descriptions checksums-all ## Build everything (default)
 
 boxes: $(BOX_NAMES) ## Build just the .box files
 
 descriptions: $(DESCRIPTION_NAMES) ## Build the markdown description for each name/version
 
-checksums: $(BOX_SUMS)  ## Calculate the box checksums
+checksums: $(BOX_SUMS)  ## Calculate the individual box checksums
+
+checksums-all: $(BOX_SUMS_ALL) ## Calculate all box checksums
 
 isos: $(ISO_NAMES) ## Download the ISOs
 
-Makefile *.mk: Makefile.in configure.options configure $(RELEASE_FILES)
+%.mk: configure
+	./configure
+
+Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
 	./configure
 
 %.md:
