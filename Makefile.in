@@ -46,7 +46,7 @@ descriptions: $(DESCRIPTION_NAMES) ## Build the markdown description for each na
 
 isos: $(ISO_NAMES) ## Download the ISOs
 
-Makefile: Makefile.in configure.options configure $(RELEASE_FILES)
+Makefile *.mk: Makefile.in configure.options configure $(RELEASE_FILES)
 	./configure
 
 %.md:
