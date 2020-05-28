@@ -153,12 +153,7 @@
 		{
 			"type": "shell-local",
 			"inline": [
-				"if [ ! -d '{{user `sendyDir` }}' ]; then printf -- 'Invalid Sendy dir passed: \"%s\"\n' '{{user `sendyDir` }}'; exit 2; fi",
-				"if [ ! -d '{{user `maintenanceDir` }}' ]; then printf -- 'Invalid Maintenance dir passed: \"%s\"\n' '{{user `maintenanceDir` }}'; exit 2; fi",
-				"mkdir -p sources",
-				"rm -f sources/*.tar",
-				"tar -c -f sources/sendy.tar -C {{user `sendyDir` }} '.'",
-				"tar -c -f sources/maintenance.tar -C {{user `maintenanceDir` }} '.'"
+				"if [ ! -d '{{user `sendyDir` }}' ]; then printf -- 'Invalid Sendy dir passed: \"%s\"\n' '{{user `sendyDir` }}'; exit 2; fi"
 			]
 		},
 		{
@@ -222,8 +217,7 @@
 				"script/vmware.sh",
 				"script/virtualbox.sh",
 				"script/parallels.sh"
-			],
-			"pause_before": "10s"
+			]
 		},
 		{
 			"type": "file",
@@ -240,17 +234,16 @@
 		},
 		{
 			"type": "shell",
-			"inlin": "sudo mkdir -p /usr/local/src/bundlesites/bundlesendy/local/ /usr/local/src/bundlesites/bundlemaintenance/local/"
+			"inline": [
+				"set -x",
+				"sudo mkdir -p /usr/local/src/bundlesites/bundlesendy/test/",
+				"sudo chown -R {{user `ssh_username`}} /usr/local/src/bundlesites"
+			]
 		},
 		{
 			"type": "file",
 			"source": "{{user `sendyDir` }}",
-			"destination": "/usr/local/src/bundlesites/bundlesendy/local/"
-		},
-		{
-			"type": "file",
-			"source": "{{user `maintenanceDir` }}",
-			"destination": "/usr/local/src/bundlesites/bundlemaintenance/local/"
+			"destination": "/usr/local/src/bundlesites/bundlesendy/test/"
 		},
 		{
 			"type": "file",
@@ -303,7 +296,6 @@
 		"box_path": "",
 		"configdir": "../BundleInfra/setup-scripts/",
 		"sendyDir": "../BundleSendy/",
-		"maintenanceDir": "../BundleMaintenance/",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"guest_tools": "true",
 		"guest_tools_distro": "vmware",

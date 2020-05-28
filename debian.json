@@ -31,7 +31,7 @@
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"tools_upload_flavor": "linux",
 			"tools_upload_path": "vmware-tools-lin.iso",
 			"vm_name": "{{ user `vm_name` }}",
@@ -71,7 +71,7 @@
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"cpus": "{{ user `cpus` }}",
 			"memory": "{{ user `memory` }}",
 			"virtualbox_version_file": ".vbox_version",
@@ -108,13 +108,25 @@
 			"parallels_tools_flavor": "lin",
 			"parallels_tools_guest_path": "prl-tools-lin.iso",
 			"parallels_tools_mode": "upload",
+			"prlctl": [
+				["set", "{{.Name}}", "--shf-host-defined", "off"],
+				["set", "{{.Name}}", "--shared-profile", "off"],
+				["set", "{{.Name}}", "--sh-app-host-to-guest", "off"],
+				["set", "{{.Name}}", "--sh-app-guest-to-host", "off"],
+				["set", "{{.Name}}", "--shared-cloud", "off"],
+				["set", "{{.Name}}", "--smart-mount", "off"],
+				["set", "{{.Name}}", "--sync-host-printers", "off"],
+				["set", "{{.Name}}", "--auto-share-camera", "off"],
+				["set", "{{.Name}}", "--auto-share-bluetooth", "off"],
+				["set", "{{.Name}}", "--device-del", "sound0"]
+			],
 			"cpus": "{{ user `cpus` }}",
 			"memory": "{{ user `memory` }}",
 			"prlctl_version_file": ".prlctl_version",
 			"shutdown_command": "sudo shutdown -h now",
 			"ssh_password": "{{ user `ssh_password` }}",
 			"ssh_username": "{{ user `ssh_username` }}",
-			"ssh_wait_timeout": "10000s",
+			"ssh_timeout": "10000s",
 			"vm_name": "{{ user `vm_name` }}"
 		}
 	],
@@ -149,19 +161,15 @@
 		{
 			"type": "shell-local",
 			"inline": [
-				"if [ ! -d '{{user `sendyDir` }}' ]; then printf -- 'Invalid Sendy dir passed: \"%s\"\n' '{{user `sendyDir` }}'; exit 2; fi",
-				"if [ ! -d '{{user `maintenanceDir` }}' ]; then printf -- 'Invalid Maintenance dir passed: \"%s\"\n' '{{user `maintenanceDir` }}'; exit 2; fi",
-				"mkdir -p sources",
-				"rm -f sources/*.tar",
-				"tar -c -f sources/sendy.tar -C {{user `sendyDir` }} '.'",
-				"tar -c -f sources/maintenance.tar -C {{user `maintenanceDir` }} '.'"
+				"if [ ! -d '{{user `sendyDir` }}' ]; then printf -- 'Invalid Sendy dir passed: \"%s\"\n' '{{user `sendyDir` }}'; exit 2; fi"
 			]
 		},
 		{
 			"type": "shell-local",
 			"inline": [
 				"mkdir -p tools-manual"
-			]
+			],
+			"pause_before": "10s"
 		},
 		{
 			"type": "file",
@@ -193,6 +201,7 @@
 		},
 		{
 			"type": "shell",
+			"pause_before": "10s",
 			"environment_vars": [
 				"MOTD={{user `motd`}}",
 				"GUEST_TOOLS={{user `guest_tools`}}",
@@ -216,8 +225,7 @@
 				"script/vmware.sh",
 				"script/virtualbox.sh",
 				"script/parallels.sh"
-			],
-			"pause_before": "10s"
+			]
 		},
 		{
 			"type": "file",
@@ -234,17 +242,16 @@
 		},
 		{
 			"type": "shell",
-			"inlin": "sudo mkdir -p /usr/local/src/bundlesites/bundlesendy/local/ /usr/local/src/bundlesites/bundlemaintenance/local/"
+			"inline": [
+				"set -x",
+				"sudo mkdir -p /usr/local/src/bundlesites/bundlesendy/test/",
+				"sudo chown -R {{user `ssh_username`}} /usr/local/src/bundlesites"
+			]
 		},
 		{
 			"type": "file",
 			"source": "{{user `sendyDir` }}",
-			"destination": "/usr/local/src/bundlesites/bundlesendy/local/"
-		},
-		{
-			"type": "file",
-			"source": "{{user `maintenanceDir` }}",
-			"destination": "/usr/local/src/bundlesites/bundlemaintenance/local/"
+			"destination": "/usr/local/src/bundlesites/bundlesendy/test/"
 		},
 		{
 			"type": "file",
@@ -297,10 +304,9 @@
 		"box_path": "",
 		"configdir": "../BundleInfra/setup-scripts/",
 		"sendyDir": "../BundleSendy/",
-		"maintenanceDir": "../BundleMaintenance/",
 		"ftp_proxy": "{{env `ftp_proxy`}}",
 		"guest_tools": "true",
-		"guest_tools_distro": "true",
+		"guest_tools_distro": "vmware",
 		"headless": "true",
 		"http_proxy": "{{env `http_proxy`}}",
 		"https_proxy": "{{env `https_proxy`}}",
