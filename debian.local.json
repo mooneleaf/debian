@@ -19,8 +19,7 @@
 			"guest_os_type": "{{ user `vmware_guest_os_type` }}",
 			"headless": "{{ user `headless` }}",
 			"http_directory": "http",
-			"iso_checksum": "{{user `iso_checksum`}}",
-			"iso_checksum_type": "{{user `iso_checksum_type`}}",
+			"iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
 			"iso_urls": [
 				"{{ user `iso_path` }}/{{ user `iso_name` }}",
 				"{{ user `iso_path` }}/{{ user `vm_name` }}.iso",
@@ -59,8 +58,7 @@
 			"guest_os_type": "{{ user `virtualbox_guest_os_type` }}",
 			"headless": "{{ user `headless` }}",
 			"http_directory": "http",
-			"iso_checksum": "{{ user `iso_checksum` }}",
-			"iso_checksum_type": "{{ user `iso_checksum_type` }}",
+			"iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
 			"iso_urls": [
 				"{{ user `iso_path` }}/{{ user `iso_name` }}",
 				"{{ user `iso_path` }}/{{ user `vm_name` }}.iso",
@@ -97,8 +95,7 @@
 			"disk_size": "{{ user `disk_size` }}",
 			"guest_os_type": "{{ user `parallels_guest_os_type` }}",
 			"http_directory": "http",
-			"iso_checksum": "{{ user `iso_checksum` }}",
-			"iso_checksum_type": "{{ user `iso_checksum_type` }}",
+			"iso_checksum": "{{user `iso_checksum_type`}}:{{user `iso_checksum`}}",
 			"iso_urls": [
 				"{{ user `iso_path` }}/{{ user `iso_name` }}",
 				"{{ user `iso_path` }}/{{ user `vm_name` }}.iso",
