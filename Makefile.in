@@ -85,7 +85,7 @@ $(BOX_SUMS_ALL): $$(ALL_BOXES)
 checksums-all: $(BOX_SUMS_ALL) ## Generate the checksums of the built boxes
 
 clean: ## Remove the generated build files
-	rm -fv configure.options Makefile
+	rm -fv configure.options Makefile releases.mk boxes.mk isos.mk descriptions.mk
 
 help: ## Show this help
 	@sed -n -E -e '/^[ a-zA-Z_-]+:.*## .*$$/p' $(MAKEFILE_LIST) | \

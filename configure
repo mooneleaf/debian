@@ -17,7 +17,7 @@ configure_debian_vagrant() {
 		archSet=false \
 		rsyncDestination='' \
 		configDir='' \
-		errorMode='abort'
+		errorMode='cleanup'
 
 
 
